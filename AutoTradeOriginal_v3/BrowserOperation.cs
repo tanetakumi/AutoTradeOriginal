@@ -7,7 +7,7 @@ using CefSharp.WinForms;
 using CefSharp;
 using System.Text.RegularExpressions;
 
-namespace AutoTradeOriginal_v3
+namespace AutoTradeOriginal
 {
     class Browser
     {

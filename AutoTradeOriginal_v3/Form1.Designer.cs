@@ -1,4 +1,4 @@
-﻿namespace HighLowAuto
+﻿namespace AutoTradeOriginal
 {
     partial class Form1
     {

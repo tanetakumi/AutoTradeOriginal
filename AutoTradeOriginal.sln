@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTradeOriginal_v3", "AutoTradeOriginal_v3\AutoTradeOriginal_v3.csproj", "{7D5EE7D9-35DD-404B-92FB-AC35CF9F84B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTradeOriginal", "AutoTradeOriginal_v3\AutoTradeOriginal.csproj", "{7D5EE7D9-35DD-404B-92FB-AC35CF9F84B4}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup_NEO_SAVIOR_AT", "Setup_NEO_SAVIOR_AT\Setup_NEO_SAVIOR_AT.vdproj", "{6099BE64-C426-49D5-B689-975F04843F2E}"
 EndProject

@@ -13,12 +13,12 @@ using System.Threading;
 using System.IO.Pipes;
 using System.IO;
 using System.Text.RegularExpressions;
-using AutoTradeOriginal_v3;
-using AutoTradeOriginal_v3.Properties;
+//using AutoTradeOriginal;
+using AutoTradeOriginal.Properties;
 using ClosedXML.Excel;
 using System.Reflection;
 
-namespace HighLowAuto
+namespace AutoTradeOriginal
 {
 
     public partial class Form1 : Form

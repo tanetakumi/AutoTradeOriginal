@@ -8,111 +8,89 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AutoTradeOriginal_v3.Properties
-{
-
-
+namespace AutoTradeOriginal.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string username
-        {
-            get
-            {
+        public string username {
+            get {
                 return ((string)(this["username"]));
             }
-            set
-            {
+            set {
                 this["username"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string password
-        {
-            get
-            {
+        public string password {
+            get {
                 return ((string)(this["password"]));
             }
-            set
-            {
+            set {
                 this["password"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string linetoken
-        {
-            get
-            {
+        public string linetoken {
+            get {
                 return ((string)(this["linetoken"]));
             }
-            set
-            {
+            set {
                 this["linetoken"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10000")]
-        public int uplimit
-        {
-            get
-            {
+        public int uplimit {
+            get {
                 return ((int)(this["uplimit"]));
             }
-            set
-            {
+            set {
                 this["uplimit"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int downlimit
-        {
-            get
-            {
+        public int downlimit {
+            get {
                 return ((int)(this["downlimit"]));
             }
-            set
-            {
+            set {
                 this["downlimit"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string license
-        {
-            get
-            {
+        public string license {
+            get {
                 return ((string)(this["license"]));
             }
-            set
-            {
+            set {
                 this["license"] = value;
             }
         }

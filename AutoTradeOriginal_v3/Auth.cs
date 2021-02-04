@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Management;
 
-namespace AutoTradeOriginal_v3
+namespace AutoTradeOriginal
 {
 
     class Auth
