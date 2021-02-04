@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTradeOriginal", "AutoTradeOriginal_v3\AutoTradeOriginal.csproj", "{7D5EE7D9-35DD-404B-92FB-AC35CF9F84B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTradeOriginal", "AutoTradeOriginal\AutoTradeOriginal.csproj", "{7D5EE7D9-35DD-404B-92FB-AC35CF9F84B4}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup_NEO_SAVIOR_AT", "Setup_NEO_SAVIOR_AT\Setup_NEO_SAVIOR_AT.vdproj", "{6099BE64-C426-49D5-B689-975F04843F2E}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup_HLAuto", "Setup_HLAuto\Setup_HLAuto.vdproj", "{C63F8337-EFF9-4D79-8E91-3814FDD1C96B}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupHighLowAuto", "SetupHighLowAuto\SetupHighLowAuto.vdproj", "{2334E351-5871-4067-8110-6254656A37B2}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "HighLowAuto", "HighLowAuto\HighLowAuto.vdproj", "{EEFEE3D1-85C2-409C-A126-D7C6894F2C0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{C63F8337-EFF9-4D79-8E91-3814FDD1C96B}.Debug|x86.ActiveCfg = Debug
 		{C63F8337-EFF9-4D79-8E91-3814FDD1C96B}.Release|Any CPU.ActiveCfg = Release
 		{C63F8337-EFF9-4D79-8E91-3814FDD1C96B}.Release|x86.ActiveCfg = Release
-		{2334E351-5871-4067-8110-6254656A37B2}.Debug|Any CPU.ActiveCfg = Debug
-		{2334E351-5871-4067-8110-6254656A37B2}.Debug|x86.ActiveCfg = Debug
-		{2334E351-5871-4067-8110-6254656A37B2}.Release|Any CPU.ActiveCfg = Release
-		{2334E351-5871-4067-8110-6254656A37B2}.Release|x86.ActiveCfg = Release
+		{EEFEE3D1-85C2-409C-A126-D7C6894F2C0B}.Debug|Any CPU.ActiveCfg = Debug
+		{EEFEE3D1-85C2-409C-A126-D7C6894F2C0B}.Debug|x86.ActiveCfg = Debug
+		{EEFEE3D1-85C2-409C-A126-D7C6894F2C0B}.Release|Any CPU.ActiveCfg = Release
+		{EEFEE3D1-85C2-409C-A126-D7C6894F2C0B}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
