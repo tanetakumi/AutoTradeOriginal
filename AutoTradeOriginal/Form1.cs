@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
-using System.IO.Pipes;
-using System.IO;
-using System.Text.RegularExpressions;
-
 using AutoTradeOriginal.Properties;
 using System.Reflection;
+using CefSharp.WinForms;
+using CefSharp;
 
 namespace AutoTradeOriginal
 {
@@ -28,7 +20,9 @@ namespace AutoTradeOriginal
         private CancellationTokenSource cts_history = null;
         private List<List<string>> history_list = new List<List<string>>();
         private string DemoReal = "デモ口座";
-        private Browser BO;
+        private BrowserOperation BO;
+
+        public ChromiumWebBrowser browser;
 
         //-----------------------------------------------------------
         public Form1()
@@ -39,15 +33,27 @@ namespace AutoTradeOriginal
             
         }
 
+        //Chromiumの初期化
         private void InitializeChromium()
         {
-            BO = new Browser();
-            tabPage_browser.Controls.Add(BO.browser);
-            BO.browser.Dock = DockStyle.Fill;
-            BO.browser.Enabled = false;
+            if (Cef.IsInitialized == false)
+            {
+                CefSettings settings = new CefSettings();
+                settings.Locale = "ja";
+                settings.AcceptLanguageList = "ja-JP";
+                settings.LogSeverity = LogSeverity.Disable;
+                settings.CefCommandLineArgs.Add("disable-gpu", "1");
+                Cef.Initialize(settings);
+            }
+            browser = new ChromiumWebBrowser("https://trade.highlow.com/");
+            tabPage_browser.Controls.Add(browser);
+            browser.Dock = DockStyle.Fill;
+            browser.Enabled = false;
+
+            BO = new BrowserOperation(browser);
         }
 
-
+        //電源周りの設定
         private void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
         {
             //----------------------
@@ -102,7 +108,14 @@ namespace AutoTradeOriginal
             Settings.Default.username = textBox_username.Text;
             Settings.Default.password = textBox_password.Text;
             Settings.Default.Save();
-            BO.BrowserShutdown();
+            browser.Dispose();
+            Cef.Shutdown();
+        }
+
+        //閉じ切った後
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Microsoft.Win32.SystemEvents.PowerModeChanged -= new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
         }
 
 
@@ -112,6 +125,7 @@ namespace AutoTradeOriginal
             button_start.Enabled = true;
             splitContainer1.Panel1.Enabled = true;
         }
+
 
         private async void button_start_Click(object sender, EventArgs e)
         {
@@ -152,7 +166,31 @@ namespace AutoTradeOriginal
                 button_stop.Enabled = true;
             }
 
-            
+            //タスク①　8:05再起動(別スレッド)
+            cts_restart = new CancellationTokenSource();
+            var t = Task.Factory.StartNew(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(2000, cts_restart.Token);
+                    DateTime dt = DateTime.Now;
+                    if (dt.Hour == 8 && dt.Minute == 5 && dt.Second <= 2)
+                    {
+                        return;
+                    }
+                }
+            },
+            cts_restart.Token).Unwrap().ContinueWith(async o =>
+            {
+                cts_restart.Dispose();
+                cts_restart = null;
+                if (!o.IsCanceled)
+                {
+                    add_text("8:05 自動再起動");
+                    await BO.Initialize(checkBox_real.Checked, textBox_username.Text, textBox_password.Text);
+                }
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
 
             //タスク②　履歴の取得とサイトの確認
             cts_history = new CancellationTokenSource();
@@ -215,9 +253,8 @@ namespace AutoTradeOriginal
         {
             if (BO.CheckExcuteJavascript())
             {
-                Func<Task<string>> pre = BO.get_history;
-                string text = await (Task<string>)Invoke(pre);
-                if (text == "") return;
+                string text = await BO.get_history();
+                if (text == "" || text == null) return;
                 string[] data = text.Remove(text.Length - 1, 1).Split('*');
                 string[][] history = new string[data.Length][];
                 for (int i = data.Length - 1; i >= 0; i--)
@@ -315,10 +352,7 @@ namespace AutoTradeOriginal
             }
         }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Microsoft.Win32.SystemEvents.PowerModeChanged -= new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
-        }
+        
 
         private async void button_pagedown_Click(object sender, EventArgs e)
         {

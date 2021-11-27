@@ -6,29 +6,13 @@ using System.Threading.Tasks;
 
 namespace AutoTradeOriginal
 {
-    class Browser
+    class BrowserOperation
     {
-        public ChromiumWebBrowser browser { get; set; }
+        private ChromiumWebBrowser browser;
 
-        public Browser()
+        public BrowserOperation(ChromiumWebBrowser _browser)
         {
-            if (Cef.IsInitialized == false)
-            {
-                CefSettings settings = new CefSettings();
-                settings.Locale = "ja";
-                settings.AcceptLanguageList = "ja-JP";
-                settings.LogSeverity = LogSeverity.Disable;
-                settings.CefCommandLineArgs.Add("disable-gpu", "1");
-                Cef.Initialize(settings);
-            }
-            browser = new ChromiumWebBrowser("https://trade.highlow.com/");
-        }
-
-        //shutdown
-        public void BrowserShutdown()
-        {
-            browser.Dispose();
-            Cef.Shutdown();
+            browser = _browser;
         }
 
         //Javascript が実行できるかどうかの確認
@@ -109,55 +93,64 @@ namespace AutoTradeOriginal
         //履歴の取得
         public async Task<string> get_history()
         {
-            string text = await ExR("var item = document.getElementById('tradeActionsTableBody');" +
-                                "var text = '';" +
-                                "for (var i = 0; i < item.childElementCount; i++){" +
-                                "for (var j = 1; j < 9; j++){" +
-                                "if (j == 2) { text += item.children[i].children[j].children[0].children[0].getAttribute('class') + '#'; }" +
+            string scr =
+                "var item = document.getElementById('tradeActionsTableBody');" +
+                    "var text = '';" +
+                    "for (var i = 0; i < item.childElementCount; i++){" +
+                        "for (var j = 1; j < 9; j++){" +
+                            "if (j == 2) { text += item.children[i].children[j].children[0].children[0].getAttribute('class') + '#'; }" +
                                 "text += item.children[i].children[j].innerText + '#';" +
-                                "}text += '*';}text;");
-            return text;
+                            "}" +
+                        "text += '*';}text;";
+
+            return (await getResultFromScript(scr)).text;
         }
 
         //投資
         public async Task<string> InvestHighLow(string currency, string up_down, int amount, int repeat, int Retry_milsec, int gametab, int period, int lon = 0)
         {
+            //取引時間のタブを選択
             await browser.EvaluateScriptAsync(
                 $"document.evaluate('//*[@id=\"assetsGameTypeZoneRegion\"]/ul/li[{gametab}]', document, null, 6, null).snapshotItem(0).click();" +
                 $"document.evaluate('//*[@id=\"assetsCategoryFilterZoneRegion\"]/div/div[{period}]', document, null, 6, null).snapshotItem(0).click();"
             );
 
             //通貨選択&通貨確認
-            if (await ExR(
-                "function currency(){document.getElementsByClassName('asset-filter--opener')[0].click();"
-                + "var links = document.getElementById('assetsList').children;"
-                + "for (var i = 0; i < links.length; i++){"
-                    + $"if (links[i].innerText == '{currency}')"
-                    + "{ links[i].click(); return true; }"
-                    + "}document.getElementsByClassName('asset-filter--opener')[0].click();return false;}currency();"
-                ) == "False") throw new Exception("通貨選択失敗");
+            string scr_select_currency =
+                "function currency(){document.getElementsByClassName('asset-filter--opener')[0].click();" +
+                "var links = document.getElementById('assetsList').children;"+
+                "for (var i = 0; i < links.length; i++){"+
+                    $"if (links[i].innerText == '{currency}')"+
+                        "{ links[i].click(); return true; }"+
+                "}document.getElementsByClassName('asset-filter--opener')[0].click();return false;}currency();";
 
-            //tradeZoneが表示されるまで待つ
-            if (!await Wait(7000, 100
-                , "document.getElementById('tradingZoneRegion').getAttribute('style');"
-                , "display: block;"
-                )) throw new Exception("ERROR:トレードゾーンが非表示でした");
+            if ((await getResultFromScript(scr_select_currency)).text == "False") throw new Exception("通貨選択失敗");
+
+
+            //トレードゾーンが表示されるまで待つ
+            if (!await waitUntilTrue(7, 100, "document.getElementById('tradingZoneRegion').getAttribute('style')=='display: block;'"))
+            {
+                throw new Exception("ERROR:トレードゾーンが非表示でした");
+            }
+
 
             //15分取引の時
             if (lon != 0)
             {
                 if (!await SelectPeriod(lon)) throw new Exception("ERROR:15分取引、時間選択に失敗しました。");
-                if (!await Wait(7000, 100
-                , "document.getElementById('tradingZoneRegion').getAttribute('style');"
-                , "display: block;"
-                )) throw new Exception("ERROR:トレードゾーンが非表示でした");
+                //トレードゾーンが表示されるまで待つ
+                if (!await waitUntilTrue(7, 100, "document.getElementById('tradingZoneRegion').getAttribute('style')=='display: block;'"))
+                {
+                    throw new Exception("ERROR:トレードゾーンが非表示でした");
+                }
             }
 
             //投資確定
             await browser.EvaluateScriptAsync(
-                $"var p = document.evaluate('//*[@id=\"trading_zone_content\"]/div[1]/div[2]/div[2]/div[1]', document, null, 6, null).snapshotItem(0);p.setAttribute('val', '{amount}'); p.click();"
-                + $"document.getElementById('{up_down}_button').click();"
-                + "document.getElementById('invest_now_button').click();"
+                $"var p = document.evaluate('//*[@id=\"trading_zone_content\"]/div[1]/div[2]/div[2]/div[1]', document, null, 6, null).snapshotItem(0);" +
+                $"p.setAttribute('val', '{amount}'); p.click();"+
+                $"document.getElementById('{up_down}_button').click();"+
+                "document.getElementById('invest_now_button').click();"
             );
 
             //投資確認と再購入
@@ -169,8 +162,8 @@ namespace AutoTradeOriginal
                 for (int i = 0; i < 30; i++)
                 {
                     await Task.Delay(100);
-                    response = await ExR("document.getElementById('notification_text').innerText;");
-                    if (response != "処理中")
+                    response = (await getResultFromScript("document.getElementById('notification_text').innerText;")).text;
+                    if (response!= null && response != "処理中")
                     {
                         break;
                     }
@@ -195,25 +188,6 @@ namespace AutoTradeOriginal
             else return "再購入" + reinvest.ToString() + "回　投資失敗";
         }
 
-
-        //Javascript実行　修正したい
-        public async Task<string> ExR(string script)
-        {
-            string res = "";
-            //string jsScript = string.Format(script);
-
-            await browser.EvaluateScriptAsync(script).ContinueWith(x =>
-            {
-                var response = x.Result;
-
-                if (response.Success && response.Result != null)
-                {
-                    res = response.Result.ToString();
-                }
-            });
-            return res;
-        }
-
         public async Task<(bool result, string text)> getResultFromScript(string script)
         {
             CefSharp.JavascriptResponse res = await browser.EvaluateScriptAsync(script);
@@ -224,7 +198,6 @@ namespace AutoTradeOriginal
         public async Task<bool> waitUntilTrue(int num, int interval, string script)
         {
             bool result = false;
-            
             for(int i = 0; i < num; i++)
             {
                 (bool res, string text) = await getResultFromScript(script);
@@ -238,24 +211,6 @@ namespace AutoTradeOriginal
             return result;
         }
 
-        //Javascriptを何度も実行して要素が変化するのを待つ
-        public async Task<bool> Wait(int timeout, int interval, string change_element, string after)
-        {
-            int t1 = timeout / interval;
-            for (int i = 0; i < t1; i++)
-            {
-                string response = await ExR(change_element);
-                if (response == after)
-                {
-                    return true;
-                }
-                else
-                {
-                    await Task.Delay(interval);
-                }
-            }
-            return false;
-        }
 
         //スクロール
         public async Task Scroll(int up_down)
@@ -285,6 +240,7 @@ namespace AutoTradeOriginal
             int m = dt.Minute;
             TimeSpan ts;
 
+            //時間が **:*4 だった時　短期:10分　中期:10分　長期:15分
             if (m % 5 == 4)
             {
                 if (rank == 3)//短期
@@ -300,6 +256,7 @@ namespace AutoTradeOriginal
                     ts = new TimeSpan(0, 15 - m % 5, 0);
                 }
             }
+            //時間が **:*5 だった時　短期:5分　中期:10分　長期:10分
             else if (m % 5 == 0)
             {
                 if (rank == 3)//短期
@@ -315,6 +272,7 @@ namespace AutoTradeOriginal
                     ts = new TimeSpan(0, 10 - m % 5, 0);
                 }
             }
+            //それ以外　短期:5分　中期:10分　長期:15分
             else
             {
                 if (rank == 3)
@@ -331,11 +289,17 @@ namespace AutoTradeOriginal
                 }
             }
             string J_time = (dt + ts).ToString("HH:mm");
-            if (await ExR("function min(){var ele = document.getElementById('carousel_container').children;" +
-                "for (var i = 0; i < ele.length; i++){" +
-                $"if (ele[i].innerText.indexOf('{J_time}') > -1)" +
-                "{ele[i].click();return true;}}return false;}" +
-                "min();") == "False") return false;
+
+            string scr =
+                "function min(){var ele = document.getElementById('carousel_container').children;" +
+                    "for (var i = 0; i < ele.length; i++){" +
+                    $"if (ele[i].innerText.indexOf('{J_time}') > -1)" +
+                        "{ele[i].click();return true;}" +
+                    "}return false;}" +
+                "min();";
+
+            string res = (await getResultFromScript(scr)).text;
+            if (res == "False" || res == null) return false;
             else return true;
         }
     }
