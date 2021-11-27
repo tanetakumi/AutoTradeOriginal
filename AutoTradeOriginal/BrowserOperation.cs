@@ -1,43 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CefSharp;
 using CefSharp.WinForms;
-using CefSharp;
+using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace AutoTradeOriginal
 {
-    class Browser
+    class BrowserOperation
     {
-        public ChromiumWebBrowser browser { get; set; }
+        private ChromiumWebBrowser browser;
 
-        public Browser()
+        public BrowserOperation(ChromiumWebBrowser _browser)
         {
-            if (Cef.IsInitialized == false)
-            {
-                CefSettings settings = new CefSettings();
-                settings.Locale = "ja";
-                settings.AcceptLanguageList = "ja-JP";
-                settings.LogSeverity = LogSeverity.Disable;
-                settings.CefCommandLineArgs.Add("disable-gpu", "1");
-                Cef.Initialize(settings);
-            }
-            browser = new ChromiumWebBrowser();
+            browser = _browser;
         }
-        public void BrowserShutdown()
-        {
-            browser.Dispose();
-            Cef.Shutdown();
-        }
+
+        //Javascript が実行できるかどうかの確認
         public bool CheckExcuteJavascript()
         {
             return browser.CanExecuteJavascriptInMainFrame;
         }
 
+        //初期化
         public async Task Initialize(bool real, string username, string password)
         {
+            //HighLowが開かれるまで待機
             browser.Load("https://trade.highlow.com/");
             do
             {
@@ -49,107 +36,122 @@ namespace AutoTradeOriginal
             if (real)
             {
                 //ログインクリック
-                await ExB("document.querySelector('#header > div > div > div > div > div > span > span > a:nth-child(5) > i').click()");
+                await browser.EvaluateScriptAsync("document.querySelector('#header > div > div > div > div > div > span > span > a:nth-child(5) > i').click()");
 
-                await Wait(15000, 1000
-                    , "document.getElementById('login-password').getAttribute('placeholder');"
-                    , "パスワード"
-                    );
+                //ログイン画面になるまで10秒待つ
+                if (!await waitUntilTrue(10, 1000, "document.getElementById('login-password').getAttribute('placeholder')=='パスワード'"))
+                {
+                    throw new Exception("リアル口座のログインできませんでした");
+                }
 
-                await ExB($"document.getElementById('login-username').value = '{username}';" +
+                //username passwordを入力する
+                await browser.EvaluateScriptAsync(
+                    $"document.getElementById('login-username').value = '{username}';" +
                     $"document.getElementById('login-password').value = '{password}';");
-                await Task.Delay(3000);
-                await ExB("document.getElementsByClassName('btn btn-highlight btn-extruded btn-fluid form-loading-indicator')[0].click();");
 
-                if (!await Wait(15000, 1000
-                    , "document.getElementById('tradingZoneRegion').getAttribute('style');"
-                    , "display: block;"
-                    )) throw new Exception("リアル口座のログインできませんでした");
+                await Task.Delay(3000);
+
+                //ログインボタンのクリック
+                await browser.EvaluateScriptAsync("document.getElementsByClassName('btn btn-highlight btn-extruded btn-fluid form-loading-indicator')[0].click();");
+
+                //トレードゾーンが表示されるまで待つ
+                if (!await waitUntilTrue(15, 1000, "document.getElementById('tradingZoneRegion').getAttribute('style')=='display: block;'"))
+                {
+                    throw new Exception("リアル口座のログインできませんでした");
+                }
 
             }
             //デモ口座
             else
             {
-                //クイックデモ
-                await ExB("document.querySelector('#header > div > div > div > div > div > span > span > a.highlight.hidden-xs.outlineNone > i').click()");
+                //クイックデモ クリック
+                await browser.EvaluateScriptAsync("document.querySelector('#header > div > div > div > div > div > span > span > a > i').click()");
 
-                if (!await Wait(15000, 1000
-                    , "document.querySelector('body').getAttribute('class')"
-                    , "non-responsive language-ja-jp cashbackCurrency-392 logged-in quick-demo   userCurrency-392 comLabel  complete onboarding-activated"
-                    )) throw new Exception("デモ口座のログインできませんでした0x21");
+                //切り替わるまで待機
+                if(!await waitUntilTrue(10, 1000, "document.querySelector('body > div:nth-child(8)').className.indexOf('active')>0"))
+                {
+                    throw new Exception("デモ口座のログインできませんでした0x21");
+                }
+
                 await Task.Delay(1000);
 
-                //取引を始める
-                await ExB("document.querySelector('#account-balance > div.pull-left.staBlock.cashback-balance.onboarding-highlighted.hiddenArea > div > div.onboarding-tooltip-content.success.last-child > a').click();");
-                if (!await Wait(5000, 1000
-                    , "document.querySelector('body').getAttribute('class')"
-                    , "non-responsive language-ja-jp cashbackCurrency-392 logged-in quick-demo   userCurrency-392 comLabel  complete"
-                    )) throw new Exception("デモ口座のログインできませんでした0x22");
+                //取引を始める 黄色いボタンをクリック
+                await browser.EvaluateScriptAsync("document.querySelector('#account-balance > div > div > div > a').click();");
+
+                //下の広告の削除
+                await browser.EvaluateScriptAsync("var obj = document.getElementsByClassName('p-ticker--wrapper')[0];if(typeof obj!='undefined'){ obj.remove(); }");
+
+                //デモ口座での取引画面が出たか
+                if (!await waitUntilTrue(10, 1000, "document.querySelector('body > div:nth-child(8)').className == 'onboarding-overlay'"))
+                {
+                    throw new Exception("デモ口座のログインできませんでした0x21");
+                }
             }
         }
 
-        public async Task<bool> IsAmountInLimits(bool _highlimit, bool _lowlimit, int HighLimit, int LowLimit)
-        {
-            string amount_str = await ExR("document.getElementById('balance').innerText;");
-            int now_amount = int.Parse(Regex.Replace(amount_str, @"[^0-9]", ""));
 
-            if (_highlimit && now_amount >= HighLimit)
-            {
-                return false;
-            }
-            if (_lowlimit && LowLimit >= now_amount)
-            {
-                return false;
-            }
-            else return true;
-        }
+        //履歴の取得
         public async Task<string> get_history()
         {
-            string text = await ExR("var item = document.getElementById('tradeActionsTableBody');" +
-                                "var text = '';" +
-                                "for (var i = 0; i < item.childElementCount; i++){" +
-                                "for (var j = 1; j < 9; j++){" +
-                                "if (j == 2) { text += item.children[i].children[j].children[0].children[0].getAttribute('class') + '#'; }" +
+            string scr =
+                "var item = document.getElementById('tradeActionsTableBody');" +
+                    "var text = '';" +
+                    "for (var i = 0; i < item.childElementCount; i++){" +
+                        "for (var j = 1; j < 9; j++){" +
+                            "if (j == 2) { text += item.children[i].children[j].children[0].children[0].getAttribute('class') + '#'; }" +
                                 "text += item.children[i].children[j].innerText + '#';" +
-                                "}text += '*';}text;");
-            return text;
+                            "}" +
+                        "text += '*';}text;";
+
+            return (await getResultFromScript(scr)).text;
         }
+
+        //投資
         public async Task<string> InvestHighLow(string currency, string up_down, int amount, int repeat, int Retry_milsec, int gametab, int period, int lon = 0)
         {
-            await ExB($"document.evaluate('//*[@id=\"assetsGameTypeZoneRegion\"]/ul/li[{gametab}]', document, null, 6, null).snapshotItem(0).click();" +
-                      $"document.evaluate('//*[@id=\"assetsCategoryFilterZoneRegion\"]/div/div[{period}]', document, null, 6, null).snapshotItem(0).click();");
+            //取引時間のタブを選択
+            await browser.EvaluateScriptAsync(
+                $"document.evaluate('//*[@id=\"assetsGameTypeZoneRegion\"]/ul/li[{gametab}]', document, null, 6, null).snapshotItem(0).click();" +
+                $"document.evaluate('//*[@id=\"assetsCategoryFilterZoneRegion\"]/div/div[{period}]', document, null, 6, null).snapshotItem(0).click();"
+            );
 
             //通貨選択&通貨確認
-            if (await ExR(
-                "function currency(){document.getElementsByClassName('asset-filter--opener')[0].click();"
-                + "var links = document.getElementById('assetsList').children;"
-                + "for (var i = 0; i < links.length; i++){"
-                    + $"if (links[i].innerText == '{currency}')"
-                    + "{ links[i].click(); return true; }"
-                    + "}document.getElementsByClassName('asset-filter--opener')[0].click();return false;}currency();"
-                ) == "False") throw new Exception("通貨選択失敗");
+            string scr_select_currency =
+                "function currency(){document.getElementsByClassName('asset-filter--opener')[0].click();" +
+                "var links = document.getElementById('assetsList').children;"+
+                "for (var i = 0; i < links.length; i++){"+
+                    $"if (links[i].innerText == '{currency}')"+
+                        "{ links[i].click(); return true; }"+
+                "}document.getElementsByClassName('asset-filter--opener')[0].click();return false;}currency();";
 
-            //tradeZoneが表示されるまで待つ
-            if (!await Wait(7000, 100
-                , "document.getElementById('tradingZoneRegion').getAttribute('style');"
-                , "display: block;"
-                )) throw new Exception("ERROR:トレードゾーンが非表示でした");
+            if ((await getResultFromScript(scr_select_currency)).text == "False") throw new Exception("通貨選択失敗");
+
+
+            //トレードゾーンが表示されるまで待つ
+            if (!await waitUntilTrue(7, 100, "document.getElementById('tradingZoneRegion').getAttribute('style')=='display: block;'"))
+            {
+                throw new Exception("ERROR:トレードゾーンが非表示でした");
+            }
+
 
             //15分取引の時
             if (lon != 0)
             {
                 if (!await SelectPeriod(lon)) throw new Exception("ERROR:15分取引、時間選択に失敗しました。");
-                if (!await Wait(7000, 100
-                , "document.getElementById('tradingZoneRegion').getAttribute('style');"
-                , "display: block;"
-                )) throw new Exception("ERROR:トレードゾーンが非表示でした");
+                //トレードゾーンが表示されるまで待つ
+                if (!await waitUntilTrue(7, 100, "document.getElementById('tradingZoneRegion').getAttribute('style')=='display: block;'"))
+                {
+                    throw new Exception("ERROR:トレードゾーンが非表示でした");
+                }
             }
 
             //投資確定
-            await ExB($"var p = document.evaluate('//*[@id=\"trading_zone_content\"]/div[1]/div[2]/div[2]/div[1]', document, null, 6, null).snapshotItem(0);p.setAttribute('val', '{amount}'); p.click();"
-                       + $"document.getElementById('{up_down}_button').click();"
-                       + "document.getElementById('invest_now_button').click(); "
-                    );
+            await browser.EvaluateScriptAsync(
+                $"var p = document.evaluate('//*[@id=\"trading_zone_content\"]/div[1]/div[2]/div[2]/div[1]', document, null, 6, null).snapshotItem(0);" +
+                $"p.setAttribute('val', '{amount}'); p.click();"+
+                $"document.getElementById('{up_down}_button').click();"+
+                "document.getElementById('invest_now_button').click();"
+            );
 
             //投資確認と再購入
             bool invest = false;
@@ -160,8 +162,8 @@ namespace AutoTradeOriginal
                 for (int i = 0; i < 30; i++)
                 {
                     await Task.Delay(100);
-                    response = await ExR("document.getElementById('notification_text').innerText;");
-                    if (response != "処理中")
+                    response = (await getResultFromScript("document.getElementById('notification_text').innerText;")).text;
+                    if (response!= null && response != "処理中")
                     {
                         break;
                     }
@@ -176,7 +178,7 @@ namespace AutoTradeOriginal
                     //もう一度、投資をクリック
                     if (j < repeat)
                     {
-                        await ExB("document.getElementById('invest_now_button').click();");
+                        await browser.EvaluateScriptAsync("document.getElementById('invest_now_button').click();");
                         reinvest++;
                         await Task.Delay(Retry_milsec);
                     }
@@ -186,80 +188,59 @@ namespace AutoTradeOriginal
             else return "再購入" + reinvest.ToString() + "回　投資失敗";
         }
 
-        public async Task<string> ExR(string script)
+        public async Task<(bool result, string text)> getResultFromScript(string script)
         {
-            string res = "";
-            //string jsScript = string.Format(script);
-
-            await browser.EvaluateScriptAsync(script).ContinueWith(x =>
-            {
-                var response = x.Result;
-
-                if (response.Success && response.Result != null)
-                {
-                    res = response.Result.ToString();
-                }
-            });
-            return res;
+            CefSharp.JavascriptResponse res = await browser.EvaluateScriptAsync(script);
+            if (res.Success && res.Result != null) return (true, res.Result.ToString());
+            else return (false, null);
         }
-        public async Task<bool> ExB(string script)
-        {
-            bool res = false;
-            //string jsScript = string.Format(script);
 
-            await browser.EvaluateScriptAsync(script).ContinueWith(x =>
-            {
-                var response = x.Result;
-
-                if (response.Success)
-                {
-                    res = true;
-                }
-            });
-            return res;
-        }
-        public async Task<bool> Wait(int timeout, int interval, string change_element, string after)
+        public async Task<bool> waitUntilTrue(int num, int interval, string script)
         {
-            int t1 = timeout / interval;
-            for (int i = 0; i < t1; i++)
+            bool result = false;
+            for(int i = 0; i < num; i++)
             {
-                string response = await ExR(change_element);
-                if (response == after)
+                (bool res, string text) = await getResultFromScript(script);
+                if(res && text == "True")
                 {
-                    return true;
+                    result = true;
+                    break;
                 }
-                else
-                {
-                    await Task.Delay(interval);
-                }
+                await Task.Delay(interval);
             }
-            return false;
+            return result;
         }
+
+
+        //スクロール
         public async Task Scroll(int up_down)
         {
             if (browser.CanExecuteJavascriptInMainFrame)
             {
                 if (up_down == 0)
                 {
-                    await ExB("scrollBy(0, 100);");
+                    await browser.EvaluateScriptAsync("scrollBy(0, 100);");
                 }
                 else
                 {
-                    await ExB("scrollBy(0, -100);");
+                    await browser.EvaluateScriptAsync("scrollBy(0, -100);");
                 }
             }
         }
+
         private async Task<bool> SelectPeriod(int rank)
         {
             DateTime dt = DateTime.Now;
 
-            if (dt.Second > 44)
+            //50秒以上の時は+60秒として次の+1分を考える
+            if (dt.Second > 50)
             {
                 dt = dt + new TimeSpan(0, 1, 0);
             }
             int m = dt.Minute;
             TimeSpan ts;
 
+            //時間が **:*4 だった時　短期:10分　中期:10分　長期:15分
             if (m % 5 == 4)
             {
                 if (rank == 3)//短期
@@ -275,6 +256,7 @@ namespace AutoTradeOriginal
                     ts = new TimeSpan(0, 15 - m % 5, 0);
                 }
             }
+            //時間が **:*5 だった時　短期:5分　中期:10分　長期:10分
             else if (m % 5 == 0)
             {
                 if (rank == 3)//短期
@@ -290,6 +272,7 @@ namespace AutoTradeOriginal
                     ts = new TimeSpan(0, 10 - m % 5, 0);
                 }
             }
+            //それ以外　短期:5分　中期:10分　長期:15分
             else
             {
                 if (rank == 3)
@@ -306,11 +289,17 @@ namespace AutoTradeOriginal
                 }
             }
             string J_time = (dt + ts).ToString("HH:mm");
-            if (await ExR("function min(){var ele = document.getElementById('carousel_container').children;" +
-            "for (var i = 0; i < ele.length; i++){" +
-                $"if (ele[i].innerText.indexOf('{J_time}') > -1)" +
-                "{ele[i].click();return true;}}return false;}" +
-                "min();") == "False") return false;
+
+            string scr =
+                "function min(){var ele = document.getElementById('carousel_container').children;" +
+                    "for (var i = 0; i < ele.length; i++){" +
+                    $"if (ele[i].innerText.indexOf('{J_time}') > -1)" +
+                        "{ele[i].click();return true;}" +
+                    "}return false;}" +
+                "min();";
+
+            string res = (await getResultFromScript(scr)).text;
+            if (res == "False" || res == null) return false;
             else return true;
         }
     }
