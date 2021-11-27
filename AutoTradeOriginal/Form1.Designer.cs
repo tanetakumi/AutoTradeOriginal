@@ -35,19 +35,6 @@
             this.tab_setting = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label15 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton6 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton5 = new System.Windows.Forms.RadioButton();
-            this.radioButton_15S = new System.Windows.Forms.RadioButton();
-            this.radioButton_1 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.radioButton_5 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton_15L = new System.Windows.Forms.RadioButton();
-            this.radioButton_15M = new System.Windows.Forms.RadioButton();
-            this.radioButton_3 = new System.Windows.Forms.RadioButton();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.checkBox_real = new System.Windows.Forms.CheckBox();
             this.textBox_username = new System.Windows.Forms.TextBox();
@@ -55,8 +42,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.numericUpDown_amount = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.numericUpDown_retry = new System.Windows.Forms.NumericUpDown();
@@ -87,10 +72,8 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_amount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_retry)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_mil)).BeginInit();
             this.tab_history.SuspendLayout();
@@ -157,7 +140,6 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.label15);
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox5);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox4);
             // 
@@ -174,163 +156,11 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(404, 183);
+            this.label15.Location = new System.Drawing.Point(23, 355);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(50, 12);
             this.label15.TabIndex = 18;
             this.label15.Text = "バージョン";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.radioButton6);
-            this.groupBox1.Controls.Add(this.radioButton2);
-            this.groupBox1.Controls.Add(this.radioButton1);
-            this.groupBox1.Controls.Add(this.radioButton5);
-            this.groupBox1.Controls.Add(this.radioButton_15S);
-            this.groupBox1.Controls.Add(this.radioButton_1);
-            this.groupBox1.Controls.Add(this.radioButton4);
-            this.groupBox1.Controls.Add(this.radioButton_5);
-            this.groupBox1.Controls.Add(this.radioButton3);
-            this.groupBox1.Controls.Add(this.radioButton_15L);
-            this.groupBox1.Controls.Add(this.radioButton_15M);
-            this.groupBox1.Controls.Add(this.radioButton_3);
-            this.groupBox1.Location = new System.Drawing.Point(361, 15);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(461, 151);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "取引時間";
-            // 
-            // radioButton6
-            // 
-            this.radioButton6.AutoSize = true;
-            this.radioButton6.Location = new System.Drawing.Point(112, 80);
-            this.radioButton6.Name = "radioButton6";
-            this.radioButton6.Size = new System.Drawing.Size(84, 16);
-            this.radioButton6.TabIndex = 11;
-            this.radioButton6.Text = "3分スプレッド";
-            this.radioButton6.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(202, 80);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(84, 16);
-            this.radioButton2.TabIndex = 12;
-            this.radioButton2.Text = "5分スプレッド";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(22, 80);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(84, 16);
-            this.radioButton1.TabIndex = 10;
-            this.radioButton1.Text = "1分スプレッド";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton5
-            // 
-            this.radioButton5.AutoSize = true;
-            this.radioButton5.Location = new System.Drawing.Point(257, 48);
-            this.radioButton5.Name = "radioButton5";
-            this.radioButton5.Size = new System.Drawing.Size(198, 16);
-            this.radioButton5.TabIndex = 6;
-            this.radioButton5.Text = "15分短期スプレッド(取引できる最短)";
-            this.radioButton5.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_15S
-            // 
-            this.radioButton_15S.AutoSize = true;
-            this.radioButton_15S.Location = new System.Drawing.Point(174, 16);
-            this.radioButton_15S.Name = "radioButton_15S";
-            this.radioButton_15S.Size = new System.Drawing.Size(155, 16);
-            this.radioButton_15S.TabIndex = 3;
-            this.radioButton_15S.Text = "15分短期(取引できる最短)";
-            this.radioButton_15S.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_1
-            // 
-            this.radioButton_1.AutoSize = true;
-            this.radioButton_1.Checked = true;
-            this.radioButton_1.Location = new System.Drawing.Point(22, 115);
-            this.radioButton_1.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton_1.Name = "radioButton_1";
-            this.radioButton_1.Size = new System.Drawing.Size(41, 16);
-            this.radioButton_1.TabIndex = 7;
-            this.radioButton_1.TabStop = true;
-            this.radioButton_1.Text = "1分";
-            this.radioButton_1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton4
-            // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(22, 48);
-            this.radioButton4.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(114, 16);
-            this.radioButton4.TabIndex = 4;
-            this.radioButton4.Text = "15分長期スプレッド";
-            this.radioButton4.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_5
-            // 
-            this.radioButton_5.AutoSize = true;
-            this.radioButton_5.Location = new System.Drawing.Point(112, 115);
-            this.radioButton_5.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton_5.Name = "radioButton_5";
-            this.radioButton_5.Size = new System.Drawing.Size(41, 16);
-            this.radioButton_5.TabIndex = 9;
-            this.radioButton_5.Text = "5分";
-            this.radioButton_5.UseVisualStyleBackColor = true;
-            // 
-            // radioButton3
-            // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(140, 48);
-            this.radioButton3.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(114, 16);
-            this.radioButton3.TabIndex = 5;
-            this.radioButton3.Text = "15分中期スプレッド";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_15L
-            // 
-            this.radioButton_15L.AutoSize = true;
-            this.radioButton_15L.Location = new System.Drawing.Point(22, 16);
-            this.radioButton_15L.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton_15L.Name = "radioButton_15L";
-            this.radioButton_15L.Size = new System.Drawing.Size(71, 16);
-            this.radioButton_15L.TabIndex = 1;
-            this.radioButton_15L.Text = "15分長期";
-            this.radioButton_15L.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_15M
-            // 
-            this.radioButton_15M.AutoSize = true;
-            this.radioButton_15M.Location = new System.Drawing.Point(97, 16);
-            this.radioButton_15M.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton_15M.Name = "radioButton_15M";
-            this.radioButton_15M.Size = new System.Drawing.Size(71, 16);
-            this.radioButton_15M.TabIndex = 2;
-            this.radioButton_15M.Text = "15分中期";
-            this.radioButton_15M.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_3
-            // 
-            this.radioButton_3.AutoSize = true;
-            this.radioButton_3.Location = new System.Drawing.Point(67, 115);
-            this.radioButton_3.Margin = new System.Windows.Forms.Padding(2);
-            this.radioButton_3.Name = "radioButton_3";
-            this.radioButton_3.Size = new System.Drawing.Size(41, 16);
-            this.radioButton_3.TabIndex = 8;
-            this.radioButton_3.Text = "3分";
-            this.radioButton_3.UseVisualStyleBackColor = true;
             // 
             // groupBox5
             // 
@@ -397,59 +227,21 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.numericUpDown_amount);
-            this.groupBox4.Controls.Add(this.label5);
             this.groupBox4.Controls.Add(this.label6);
             this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Controls.Add(this.numericUpDown_retry);
             this.groupBox4.Controls.Add(this.numericUpDown_mil);
             this.groupBox4.Location = new System.Drawing.Point(14, 201);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(332, 139);
+            this.groupBox4.Size = new System.Drawing.Size(332, 108);
             this.groupBox4.TabIndex = 16;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "取引基本設定";
             // 
-            // numericUpDown_amount
-            // 
-            this.numericUpDown_amount.Increment = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDown_amount.Location = new System.Drawing.Point(86, 36);
-            this.numericUpDown_amount.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numericUpDown_amount.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDown_amount.Name = "numericUpDown_amount";
-            this.numericUpDown_amount.Size = new System.Drawing.Size(61, 19);
-            this.numericUpDown_amount.TabIndex = 13;
-            this.numericUpDown_amount.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(19, 38);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(53, 12);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "購入金額";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(19, 72);
+            this.label6.Location = new System.Drawing.Point(33, 38);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(61, 12);
             this.label6.TabIndex = 14;
@@ -459,7 +251,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("MS UI Gothic", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label10.Location = new System.Drawing.Point(9, 107);
+            this.label10.Location = new System.Drawing.Point(23, 73);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(86, 11);
             this.label10.TabIndex = 5;
@@ -467,7 +259,7 @@
             // 
             // numericUpDown_retry
             // 
-            this.numericUpDown_retry.Location = new System.Drawing.Point(86, 70);
+            this.numericUpDown_retry.Location = new System.Drawing.Point(100, 36);
             this.numericUpDown_retry.Maximum = new decimal(new int[] {
             10,
             0,
@@ -494,7 +286,7 @@
             0,
             0,
             0});
-            this.numericUpDown_mil.Location = new System.Drawing.Point(98, 103);
+            this.numericUpDown_mil.Location = new System.Drawing.Point(112, 69);
             this.numericUpDown_mil.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -707,13 +499,10 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_amount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_retry)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_mil)).EndInit();
             this.tab_history.ResumeLayout(false);
@@ -732,8 +521,6 @@
         private System.Windows.Forms.TabPage tab_setting;
         private System.Windows.Forms.ListBox listBox_log;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.NumericUpDown numericUpDown_amount;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown numericUpDown_retry;
         private System.Windows.Forms.GroupBox groupBox5;
@@ -742,12 +529,6 @@
         private System.Windows.Forms.TextBox textBox_password;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radioButton_1;
-        private System.Windows.Forms.RadioButton radioButton_5;
-        private System.Windows.Forms.RadioButton radioButton_15L;
-        private System.Windows.Forms.RadioButton radioButton_15M;
-        private System.Windows.Forms.RadioButton radioButton_3;
         private System.Windows.Forms.TabPage tab_history;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -767,13 +548,6 @@
         private System.Windows.Forms.TextBox textBox_read;
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;
-        private System.Windows.Forms.RadioButton radioButton_15S;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton6;
-        private System.Windows.Forms.RadioButton radioButton5;
-        private System.Windows.Forms.RadioButton radioButton4;
-        private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button button_pageup;

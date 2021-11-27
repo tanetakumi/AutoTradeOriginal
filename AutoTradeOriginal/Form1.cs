@@ -30,14 +30,6 @@ namespace AutoTradeOriginal
         private string DemoReal = "デモ口座";
         private Browser BO;
 
-        public class Tab
-        {
-            public int Gametab { get; set; }
-            public int Period { get; set; }
-            public int Rank { get; set; }
-        }
-        private Tab tab = new Tab();
-
         //-----------------------------------------------------------
         public Form1()
         {
@@ -139,10 +131,6 @@ namespace AutoTradeOriginal
                 Enable_interface();
                 return;
             }
-            //--------------------------------------------------------------------------------------------------------------
-
-            //選択
-            Setperiod();
 
             //①初期化
             try
@@ -203,7 +191,7 @@ namespace AutoTradeOriginal
                 cts_loop = new CancellationTokenSource();
                 await InfiniteLoopAsync(cts_loop.Token);
             }
-            catch (OperationCanceledException)
+            catch
             {
                 //キャンセルされたら、つまりCancellationTokenのCancelメソッドが実行されたら、
                 //発生するOperationCanceledExceptionをキャッチしてキャンセル処理を行うコードです。
@@ -299,10 +287,10 @@ namespace AutoTradeOriginal
                 //②投資
                 try
                 {
-                    (string currency, string highlow, int price) tags = MessageToTuple(message);
+                    (string currency, string high_low, int price, int gametab, int period, int rank) tags = MessageToTuple(message);
                     int repeat = Decimal.ToInt32(numericUpDown_retry.Value);
                     int retry_milsec = Decimal.ToInt32(numericUpDown_mil.Value);
-                    string result = await BO.InvestHighLow(tags.currency, tags.highlow, tags.price, repeat, retry_milsec, tab.Gametab, tab.Period, tab.Rank);
+                    string result = await BO.InvestHighLow(tags.currency, tags.high_low, tags.price, repeat, retry_milsec, tags.gametab, tags.period, tags.rank);
                     add_text(result);
                 }
                 catch (Exception ex)
@@ -330,83 +318,6 @@ namespace AutoTradeOriginal
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Microsoft.Win32.SystemEvents.PowerModeChanged -= new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
-        }
-
-        private void Setperiod()
-        {
-            foreach (RadioButton rb in groupBox1.Controls)
-            {
-                if (rb.Checked)
-                {
-                    switch (rb.TabIndex)
-                    {
-                        //HighLow
-                        case 1:
-                            tab.Gametab = 1;
-                            tab.Period = 2;
-                            tab.Rank = 1;
-                            break;
-                        case 2:
-                            tab.Gametab = 1;
-                            tab.Period = 2;
-                            tab.Rank = 2;
-                            break;
-                        case 3:
-                            tab.Gametab = 1;
-                            tab.Period = 2;
-                            tab.Rank = 3;
-                            break;
-                        //HighLowスプ
-                        case 4:
-                            tab.Gametab = 2;
-                            tab.Period = 2;
-                            tab.Rank = 1;
-                            break;
-                        case 5:
-                            tab.Gametab = 2;
-                            tab.Period = 2;
-                            tab.Rank = 2;
-                            break;
-                        case 6:
-                            tab.Gametab = 2;
-                            tab.Period = 2;
-                            tab.Rank = 3;
-                            break;
-                        //Turbo
-                        case 7:
-                            tab.Gametab = 3;
-                            tab.Period = 3;
-                            tab.Rank = 0;
-                            break;
-                        case 8:
-                            tab.Gametab = 3;
-                            tab.Period = 4;
-                            tab.Rank = 0;
-                            break;
-                        case 9:
-                            tab.Gametab = 3;
-                            tab.Period = 5;
-                            tab.Rank = 0;
-                            break;
-                        //Turboスプ
-                        case 10:
-                            tab.Gametab = 4;
-                            tab.Period = 3;
-                            tab.Rank = 0;
-                            break;
-                        case 11:
-                            tab.Gametab = 4;
-                            tab.Period = 4;
-                            tab.Rank = 0;
-                            break;
-                        case 12:
-                            tab.Gametab = 4;
-                            tab.Period = 5;
-                            tab.Rank = 0;
-                            break;
-                    }
-                }
-            }
         }
 
         private async void button_pagedown_Click(object sender, EventArgs e)

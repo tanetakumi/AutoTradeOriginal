@@ -28,12 +28,14 @@ namespace AutoTradeOriginal
 
     public partial class Form1
     {
-        private (string currency, string high_low, int price) MessageToTuple(string message)
+        //受け取ったメッセージからtupleを作成
+        private (string currency, string high_low, int price, int gametab, int period, int rank) MessageToTuple(string message)
         {
+            //メッセージ　<通貨>#<HighLow>#<価格>#<時間軸ナンバー>
             string[] mes = message.Split('#');
-            if (mes.Length == 3)
+            if (mes.Length == 4)
             {
-                
+                //HighかLowの選択
                 string high_low = "";
                 if(mes[1].ToLower() == "high" || mes[1].ToLower() == "up")
                 {
@@ -48,16 +50,72 @@ namespace AutoTradeOriginal
                     throw new ArgumentOutOfRangeException("Namedpipeのメッセージが範囲外のものです。");
                 }
 
+                //取引価格の選択
                 int price = int.Parse(mes[2]);
 
-                return (mes[0], high_low, price);
+                //取引時間軸の選択
+                int pnum = int.Parse(mes[3]);
+                (int gametab, int period, int rank) tup = selectPeriod(pnum);
+
+                return (mes[0], high_low, price, tup.gametab, tup.period, tup.rank);
             } 
             else
             {
                 throw new IndexOutOfRangeException();
             }
-            
+        }
 
+        //取引時間軸の選択
+        private (int gametab, int period, int rank) selectPeriod(int num)
+        {
+            (int, int, int) tuple;
+            switch (num)
+            {
+                //HighLow
+                case 1:
+                    tuple = (1, 2, 1);
+                    break;
+                case 2:
+                    tuple = (1, 2, 2);
+                    break;
+                case 3:
+                    tuple = (1, 2, 3);
+                    break;
+                //HighLowスプ
+                case 4:
+                    tuple = (2, 2, 1);
+                    break;
+                case 5:
+                    tuple = (2, 2, 2);
+                    break;
+                case 6:
+                    tuple = (2, 2, 3);
+                    break;
+                //Turbo
+                case 7:
+                    tuple = (3, 3, 0);
+                    break;
+                case 8:
+                    tuple = (3, 4, 0);
+                    break;
+                case 9:
+                    tuple = (3, 5, 0);
+                    break;
+                //Turboスプ
+                case 10:
+                    tuple = (4, 3, 0);
+                    break;
+                case 11:
+                    tuple = (4, 4, 0);
+                    break;
+                case 12:
+                    tuple = (4, 5, 0);
+                    break;
+                default:
+                    tuple = (0, 0, 0);
+                    break;
+            }
+            return tuple;
         }
     }
 }
