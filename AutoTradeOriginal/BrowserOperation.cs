@@ -54,60 +54,54 @@ namespace AutoTradeOriginal
                 //ログインクリック
                 await browser.EvaluateScriptAsync("document.querySelector('#header > div > div > div > div > div > span > span > a:nth-child(5) > i').click()");
 
-                await Wait(15000, 1000
-                    , "document.getElementById('login-password').getAttribute('placeholder');"
-                    , "パスワード"
-                    );
+                //ログイン画面になるまで10秒待つ
+                if (!await waitUntilTrue(10, 1000, "document.getElementById('login-password').getAttribute('placeholder')=='パスワード'"))
+                {
+                    throw new Exception("リアル口座のログインできませんでした");
+                }
 
-                await browser.EvaluateScriptAsync($"document.getElementById('login-username').value = '{username}';" +
+                //username passwordを入力する
+                await browser.EvaluateScriptAsync(
+                    $"document.getElementById('login-username').value = '{username}';" +
                     $"document.getElementById('login-password').value = '{password}';");
+
                 await Task.Delay(3000);
+
+                //ログインボタンのクリック
                 await browser.EvaluateScriptAsync("document.getElementsByClassName('btn btn-highlight btn-extruded btn-fluid form-loading-indicator')[0].click();");
 
-                if (!await Wait(15000, 1000
-                    , "document.getElementById('tradingZoneRegion').getAttribute('style');"
-                    , "display: block;"
-                    )) throw new Exception("リアル口座のログインできませんでした");
+                //トレードゾーンが表示されるまで待つ
+                if (!await waitUntilTrue(15, 1000, "document.getElementById('tradingZoneRegion').getAttribute('style')=='display: block;'"))
+                {
+                    throw new Exception("リアル口座のログインできませんでした");
+                }
 
             }
             //デモ口座
             else
             {
-                Console.WriteLine((await getResultFromScript("document.querySelector('body').getAttribute('class').indexOf('onboarding-activated')>0")).text);
-                /*
-                Console.WriteLine("hello"+
-                    await ExR(
-                    "const sleep = ms => new Promise(res => setTimeout(res, ms))" +
-                    "async function wait(){" +
-                        "await sleep(2000)" +
-                        "return true;" +
-                    "}await wait()")
-                    );
-
-                //クイックデモ
+                //クイックデモ クリック
                 await browser.EvaluateScriptAsync("document.querySelector('#header > div > div > div > div > div > span > span > a > i').click()");
 
-                if (!await Wait(15000, 1000
-                    , "document.querySelector('body').getAttribute('class')"
-                    , "non-responsive language-ja-jp cashbackCurrency-392 logged-in quick-demo   userCurrency-392 comLabel  complete onboarding-activated"
-                    )) throw new Exception("デモ口座のログインできませんでした0x21");
+                //切り替わるまで待機
+                if(!await waitUntilTrue(10, 1000, "document.querySelector('body > div:nth-child(8)').className.indexOf('active')>0"))
+                {
+                    throw new Exception("デモ口座のログインできませんでした0x21");
+                }
 
                 await Task.Delay(1000);
 
-                //取引を始める
-                await browser.EvaluateScriptAsync(
-                    "document.querySelector('#account-balance > div.pull-left.staBlock.cashback-balance.onboarding-highlighted.hiddenArea > div > div.onboarding-tooltip-content.success.last-child > a').click();"
-                );
+                //取引を始める 黄色いボタンをクリック
+                await browser.EvaluateScriptAsync("document.querySelector('#account-balance > div > div > div > a').click();");
 
                 //下の広告の削除
-                await browser.EvaluateScriptAsync(
-                    "var obj = document.getElementsByClassName('p-ticker--wrapper')[0];if (typeof obj != 'undefined') { obj.remove(); }"
-                );
+                await browser.EvaluateScriptAsync("var obj = document.getElementsByClassName('p-ticker--wrapper')[0];if(typeof obj!='undefined'){ obj.remove(); }");
 
-                if (!await Wait(5000, 1000
-                    , "document.querySelector('body').getAttribute('class')"
-                    , "non-responsive language-ja-jp cashbackCurrency-392 logged-in quick-demo   userCurrency-392 comLabel  complete"
-                )) throw new Exception("デモ口座のログインできませんでした0x22");*/
+                //デモ口座での取引画面が出たか
+                if (!await waitUntilTrue(10, 1000, "document.querySelector('body > div:nth-child(8)').className == 'onboarding-overlay'"))
+                {
+                    throw new Exception("デモ口座のログインできませんでした0x21");
+                }
             }
         }
 
@@ -227,10 +221,21 @@ namespace AutoTradeOriginal
             else return (false, null);
         }
 
-        public async Task<bool> waitUntilTrue(string script)
+        public async Task<bool> waitUntilTrue(int num, int interval, string script)
         {
-            await getResultFromScript(script);
-            return true;
+            bool result = false;
+            
+            for(int i = 0; i < num; i++)
+            {
+                (bool res, string text) = await getResultFromScript(script);
+                if(res && text == "True")
+                {
+                    result = true;
+                    break;
+                }
+                await Task.Delay(interval);
+            }
+            return result;
         }
 
         //Javascriptを何度も実行して要素が変化するのを待つ
