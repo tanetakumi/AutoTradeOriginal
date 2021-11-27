@@ -13,9 +13,8 @@ using System.Threading;
 using System.IO.Pipes;
 using System.IO;
 using System.Text.RegularExpressions;
-//using AutoTradeOriginal;
+
 using AutoTradeOriginal.Properties;
-using ClosedXML.Excel;
 using System.Reflection;
 
 namespace AutoTradeOriginal
@@ -30,7 +29,6 @@ namespace AutoTradeOriginal
         private List<List<string>> history_list = new List<List<string>>();
         private string DemoReal = "デモ口座";
         private Browser BO;
-        private Auth auth;
 
         public class Tab
         {
@@ -44,8 +42,9 @@ namespace AutoTradeOriginal
         public Form1()
         {
             InitializeComponent();
-            Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
             InitializeChromium();
+            Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
+            
         }
 
         private void InitializeChromium()
@@ -59,7 +58,6 @@ namespace AutoTradeOriginal
 
         private void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
         {
-
             //----------------------
             // 電源状態を画面に表示
             //----------------------
@@ -79,18 +77,16 @@ namespace AutoTradeOriginal
             }
         }
 
-
+        //ロードしたタイミング
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox_username.Text = Settings.Default.username;
             textBox_password.Text = Settings.Default.password;
-            UpLimit.Value = Settings.Default.uplimit;
-            DownLimit.Value = Settings.Default.downlimit;
-            string ver = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            label15.Text = "バージョン:" + ver;
+            label15.Text = "バージョン:" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         }
 
+        //閉じるとき
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (MessageBox.Show("エクスポートはしましたか？\n\r終了してもいいですか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
@@ -113,8 +109,6 @@ namespace AutoTradeOriginal
 
             Settings.Default.username = textBox_username.Text;
             Settings.Default.password = textBox_password.Text;
-            Settings.Default.uplimit = (int)UpLimit.Value;
-            Settings.Default.downlimit = (int)DownLimit.Value;
             Settings.Default.Save();
             BO.BrowserShutdown();
         }
@@ -126,6 +120,7 @@ namespace AutoTradeOriginal
             button_start.Enabled = true;
             splitContainer1.Panel1.Enabled = true;
         }
+
         private async void button_start_Click(object sender, EventArgs e)
         {
             button_start.Enabled = false;
@@ -148,6 +143,7 @@ namespace AutoTradeOriginal
 
             //選択
             Setperiod();
+
             //①初期化
             try
             {
@@ -191,14 +187,15 @@ namespace AutoTradeOriginal
             },
             cts_history.Token
             ).Unwrap().ContinueWith(o =>
-           {
-               Console.WriteLine("履歴の取得スレッド終了");
-               add_text("履歴の取得スレッド終了");
-               cts_history.Dispose();
-               cts_history = null;
+            {
+                Console.WriteLine("履歴の取得スレッド終了");
+                add_text("履歴の取得スレッド終了");
+                cts_history.Dispose();
+                cts_history = null;
 
-           },
+            },
             TaskScheduler.FromCurrentSynchronizationContext());
+
 
             //②投資ループ
             try
@@ -224,6 +221,8 @@ namespace AutoTradeOriginal
                 add_text("ｷｬﾝｾﾙ");
             }
         }
+
+
         private async Task insert_historylist()
         {
             if (BO.CheckExcuteJavascript())
@@ -290,41 +289,20 @@ namespace AutoTradeOriginal
         {
             while (true)
             {
+                
                 //Message:  0-通貨# 1-HighLow# 2-金額倍率
                 //①メッセージの受け取り
-                string Message = "";
-                using (NamedPipeServerStream npss = new NamedPipeServerStream("HighLowPipe", PipeDirection.InOut, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
-                {
-                    Invoke(new Action(() => add_text("待機中です")));
-                    await npss.WaitForConnectionAsync(ct);
-                    using (StreamReader reader = new StreamReader(npss))
-                    {
-                        Message = reader.ReadLine();
-                        Invoke(new Action(() => add_text("シグナルを受け取りました")));
-                    }
-                }
-                //③口座残高確認
-                if (checkBox_uplimit.Checked || checkBox_downlimit.Checked)
-                {
-                    int uplimit = Decimal.ToInt32(UpLimit.Value);
-                    int downlimit = Decimal.ToInt32(DownLimit.Value);
-                    bool InLimitResult = await BO.IsAmountInLimits(checkBox_uplimit.Checked, checkBox_downlimit.Checked, uplimit, downlimit);
-                    if (!InLimitResult)
-                    {
-                        add_text("口座残高の制限に達しました。");
-                        throw new OperationCanceledException();
-                    }
-                }
-                //④投資
-                string result = "";
-                string[] mes = Message.Split('#');
+                add_text("待機します");
+                string message = await WaitForNamedpipe("highlowpipe", ct);
+                add_text("シグナルを受け取りました");
+
+                //②投資
                 try
                 {
-                    int mag = int.Parse(mes[2]);
-                    int amount = mag*Decimal.ToInt32(numericUpDown_amount.Value);
+                    (string currency, string highlow, int price) tags = MessageToTuple(message);
                     int repeat = Decimal.ToInt32(numericUpDown_retry.Value);
                     int retry_milsec = Decimal.ToInt32(numericUpDown_mil.Value);
-                    result = await BO.InvestHighLow(mes[0], mes[1], amount, repeat, retry_milsec, tab.Gametab, tab.Period, tab.Rank);
+                    string result = await BO.InvestHighLow(tags.currency, tags.highlow, tags.price, repeat, retry_milsec, tab.Gametab, tab.Period, tab.Rank);
                     add_text(result);
                 }
                 catch (Exception ex)
@@ -335,45 +313,6 @@ namespace AutoTradeOriginal
             }
         }
 
-
-        private void checkBox_downlimit_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox_downlimit.Checked)
-            {
-                DownLimit.Enabled = true;
-            }
-            else
-            {
-                DownLimit.Enabled = false;
-            }
-
-        }
-        private void checkBox_uplimit_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox_uplimit.Checked)
-            {
-                UpLimit.Enabled = true;
-            }
-            else
-            {
-                UpLimit.Enabled = false;
-            }
-        }
-
-        private static async Task sendMessage(string message, string token)
-        {
-            using (var client = new HttpClient())
-            {
-                var content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    { "message", message },
-                });
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-                var result = await client.PostAsync("https://notify-api.line.me/api/notify", content);
-            }
-        }
 
         private void add_text(string text)
         {
@@ -388,33 +327,11 @@ namespace AutoTradeOriginal
             }
         }
 
-        private void button_delet_Click(object sender, EventArgs e)
-        {
-            //項目が１つも選択されていない場合
-            if (listView1.SelectedItems.Count == 0)
-            {
-                //処理を抜ける
-                return;
-            }
-            // 選択されているリストを取得しリストビューから削除する
-            foreach (ListViewItem item in listView1.SelectedItems)
-            {
-                listView1.Items.Remove(item);
-            }
-        }
-
-
-        private void button_delall_Click(object sender, EventArgs e)
-        {
-            listView1.Items.Clear();
-        }
-        
-
-
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Microsoft.Win32.SystemEvents.PowerModeChanged -= new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
         }
+
         private void Setperiod()
         {
             foreach (RadioButton rb in groupBox1.Controls)
