@@ -71,44 +71,62 @@ namespace AutoTradeOriginal
             (int, int, int) tuple;
             switch (num)
             {
-                //HighLow
-                case 1:
-                    tuple = (1, 2, 1);
+                //HighLow 15分
+                case 1://15分短期
+                 tuple = (1, 2, 1);
                     break;
-                case 2:
+                case 2://15分中期
                     tuple = (1, 2, 2);
                     break;
-                case 3:
+                case 3://15分長期
                     tuple = (1, 2, 3);
                     break;
+                case 4://1時間
+                    tuple = (1, 3, 0);
+                    break;
+                case 5://1日
+                    tuple = (1, 4, 0);
+                    break;
                 //HighLowスプ
-                case 4:
+                case 6://15分短期
                     tuple = (2, 2, 1);
                     break;
-                case 5:
+                case 7://15分中期
                     tuple = (2, 2, 2);
                     break;
-                case 6:
+                case 8://15分長期
                     tuple = (2, 2, 3);
                     break;
+                case 9://1時間
+                    tuple = (2, 3, 0);
+                    break;
+                case 10://1日
+                    tuple = (2, 4, 0);
+                    break;
                 //Turbo
-                case 7:
+                case 11://30秒
+                    tuple = (3, 2, 0);
+                    break;
+                case 12://1分
                     tuple = (3, 3, 0);
                     break;
-                case 8:
+                case 13://3分
                     tuple = (3, 4, 0);
                     break;
-                case 9:
+                case 14://5分
                     tuple = (3, 5, 0);
                     break;
                 //Turboスプ
-                case 10:
+                case 15://30秒
+                    tuple = (4, 2, 0);
+                    break;
+                case 16://1分
                     tuple = (4, 3, 0);
                     break;
-                case 11:
+                case 17://3分
                     tuple = (4, 4, 0);
                     break;
-                case 12:
+                case 18://5分
                     tuple = (4, 5, 0);
                     break;
                 default:

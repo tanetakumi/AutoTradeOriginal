@@ -87,7 +87,7 @@ namespace AutoTradeOriginal
         //閉じるとき
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (MessageBox.Show("エクスポートはしましたか？\n\r終了してもいいですか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (MessageBox.Show("終了してもいいですか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 e.Cancel = true;
                 return;
@@ -174,7 +174,7 @@ namespace AutoTradeOriginal
                 {
                     await Task.Delay(2000, cts_restart.Token);
                     DateTime dt = DateTime.Now;
-                    if (dt.Hour == 8 && dt.Minute == 5 && dt.Second <= 2)
+                    if (dt.Hour == 22 && dt.Minute == 34 && dt.Second <= 2)
                     {
                         return;
                     }
@@ -365,30 +365,3 @@ namespace AutoTradeOriginal
         }
     }
 }
-
-/*
-//タスク①　8:05再起動(別スレッド)
-cts_restart = new CancellationTokenSource();
-var t = Task.Factory.StartNew(async () =>
-{
-    while (true)
-    {
-        await Task.Delay(2000, cts_restart.Token);
-        DateTime dt = DateTime.Now;
-        if (dt.Hour == 8 && dt.Minute == 5 && dt.Second <= 2)
-        {
-            return;
-        }
-    }
-},
-cts_restart.Token).Unwrap().ContinueWith(async o =>
-{
-    cts_restart.Dispose();
-    cts_restart = null;
-    if (!o.IsCanceled)
-    {
-        add_text("8:05 自動再起動");
-        await BO.Initialize(checkBox_real.Checked, textBox_username.Text, textBox_password.Text);
-    }
-},
-TaskScheduler.FromCurrentSynchronizationContext());*/
