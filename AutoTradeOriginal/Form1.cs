@@ -237,6 +237,7 @@ namespace AutoTradeOriginal
             {
                 cts_loop = new CancellationTokenSource();
                 await InfiniteLoopAsync(cts_loop.Token);
+                
             }
             catch
             {
@@ -327,13 +328,13 @@ namespace AutoTradeOriginal
                 //Message:  0-通貨# 1-HighLow# 2-金額倍率
                 //①メッセージの受け取り
                 add_text("待機します");
-                string message = await WaitForNamedpipe("highlowpipe", ct);
+                (string currency, string high_low, int price, int gametab, int period, int rank) tags = await WaiteForTask();
                 add_text("シグナルを受け取りました");
 
                 //②投資
                 try
                 {
-                    (string currency, string high_low, int price, int gametab, int period, int rank) tags = MessageToTuple(message);
+                    
                     int repeat = Decimal.ToInt32(numericUpDown_retry.Value);
                     int retry_milsec = Decimal.ToInt32(numericUpDown_mil.Value);
                     string result = await BO.InvestHighLow(tags.currency, tags.high_low, tags.price, repeat, retry_milsec, tags.gametab, tags.period, tags.rank);
@@ -344,6 +345,7 @@ namespace AutoTradeOriginal
                     add_text(ex.Message);
                 }
 
+                await Task.Delay(1000);
             }
         }
 
@@ -380,7 +382,8 @@ namespace AutoTradeOriginal
                 comboBox1.SelectedItem.ToString(),
                 dateTimePicker1.Value.ToString("HH:mm"),
                 comboBox2.SelectedItem.ToString(),
-                comboBox3.SelectedItem.ToString()
+                comboBox3.SelectedItem.ToString(),
+                numericUpDown1.Value.ToString()
             }));
         }
 
@@ -393,5 +396,29 @@ namespace AutoTradeOriginal
             }
         }
 
+        private async Task<(string currency, string high_low, int price, int gametab, int period, int rank)> WaiteForTask()
+        {
+            while (true)
+            {
+                DateTime cur = DateTime.Now;
+                foreach(ListViewItem item in listView2.Items)
+                {
+                    DateTime time = DateTime.Parse(item.SubItems[1].Text);
+                    
+                    if(time.Hour == cur.Hour && time.Minute == cur.Minute && cur.Second == 00)
+                    {
+                        var t = selectPeriod(item.SubItems[2].Text);
+                        return (item.SubItems[0].Text, item.SubItems[3].Text, Int32.Parse(item.SubItems[4].Text), t.gametab, t.period, t.rank);
+                    }
+                    
+                }
+                await Task.Delay(500);
+            }
+                
+        }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

@@ -135,5 +135,30 @@ namespace AutoTradeOriginal
             }
             return tuple;
         }
+
+        //取引時間軸の選択
+        private (int gametab, int period, int rank) selectPeriod(string mes)
+        {
+            string[] periods = new string[] {
+            "HighLow-15分短期",
+            "HighLow-15分中期",
+            "HighLow-15分長期",
+            "HighLow-1時間",
+            "HighLow-1日",
+            "HighLowスプ-15分短期",
+            "HighLowスプ-15分中期",
+            "HighLowスプ-15分長期",
+            "HighLowスプ-1時間",
+            "HighLowスプ-1日",
+            "Turbo-30秒",
+            "Turbo-1分",
+            "Turbo-3分",
+            "Turbo-5分",
+            "Turboスプ-30秒",
+            "Turboスプ-1分",
+            "Turboスプ-3分",
+            "Turboスプ-5分" };
+            return selectPeriod(Array.IndexOf(periods, mes) + 1);
+        }
     }
 }
