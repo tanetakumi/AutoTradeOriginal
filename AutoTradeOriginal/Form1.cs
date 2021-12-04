@@ -28,9 +28,18 @@ namespace AutoTradeOriginal
         public Form1()
         {
             InitializeComponent();
+            InitializeForm();
             InitializeChromium();
             Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
             
+        }
+
+        //Formの初期化
+        private void InitializeForm()
+        {
+            this.comboBox1.SelectedIndex = 0;
+            this.comboBox2.SelectedIndex = 0;
+            this.comboBox3.SelectedIndex = 0;
         }
 
         //Chromiumの初期化
@@ -174,7 +183,7 @@ namespace AutoTradeOriginal
                 {
                     await Task.Delay(2000, cts_restart.Token);
                     DateTime dt = DateTime.Now;
-                    if (dt.Hour == 22 && dt.Minute == 34 && dt.Second <= 2)
+                    if (dt.Hour == 8 && dt.Minute == 5 && dt.Second <= 2)
                     {
                         return;
                     }
@@ -363,5 +372,26 @@ namespace AutoTradeOriginal
         {
             await BO.Scroll(1);
         }
+
+        //追加ボタン
+        private void button1_Click(object sender, EventArgs e)
+        {
+            listView2.Items.Add(new ListViewItem(new String[] {
+                comboBox1.SelectedItem.ToString(),
+                dateTimePicker1.Value.ToString("HH:mm"),
+                comboBox2.SelectedItem.ToString(),
+                comboBox3.SelectedItem.ToString()
+            }));
+        }
+
+        //削除ボタン
+        private void button2_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listView2.SelectedItems)
+            {
+                listView2.Items.Remove(item);
+            }
+        }
+
     }
 }

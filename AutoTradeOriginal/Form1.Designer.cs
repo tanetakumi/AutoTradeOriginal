@@ -34,6 +34,15 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tab_setting = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.listView2 = new System.Windows.Forms.ListView();
+            this.currency = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.time = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.period = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.highlow = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label15 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.checkBox_real = new System.Windows.Forms.CheckBox();
@@ -66,6 +75,9 @@
             this.label13 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox_read = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tab_setting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -139,6 +151,14 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.button3);
+            this.splitContainer1.Panel1.Controls.Add(this.button2);
+            this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitContainer1.Panel1.Controls.Add(this.comboBox2);
+            this.splitContainer1.Panel1.Controls.Add(this.comboBox3);
+            this.splitContainer1.Panel1.Controls.Add(this.comboBox1);
+            this.splitContainer1.Panel1.Controls.Add(this.dateTimePicker1);
+            this.splitContainer1.Panel1.Controls.Add(this.listView2);
             this.splitContainer1.Panel1.Controls.Add(this.label15);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox5);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox4);
@@ -152,6 +172,104 @@
             this.splitContainer1.Size = new System.Drawing.Size(1150, 557);
             this.splitContainer1.SplitterDistance = 830;
             this.splitContainer1.TabIndex = 19;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "HighLow-15分短期",
+            "HighLow-15分中期",
+            "HighLow-15分長期",
+            "HighLow-1時間",
+            "HighLow-1日",
+            "HighLowスプ-15分短期",
+            "HighLowスプ-15分中期",
+            "HighLowスプ-15分長期",
+            "HighLowスプ-1時間",
+            "HighLowスプ-1日",
+            "Turbo-30秒",
+            "Turbo-1分",
+            "Turbo-3分",
+            "Turbo-5分",
+            "Turboスプ-30秒",
+            "Turboスプ-1分",
+            "Turboスプ-3分",
+            "Turboスプ-5分"});
+            this.comboBox2.Location = new System.Drawing.Point(586, 349);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(140, 20);
+            this.comboBox2.TabIndex = 22;
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Items.AddRange(new object[] {
+            "High",
+            "Low"});
+            this.comboBox3.Location = new System.Drawing.Point(730, 350);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(72, 20);
+            this.comboBox3.TabIndex = 21;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "USD/JPY",
+            "EUR/USD"});
+            this.comboBox1.Location = new System.Drawing.Point(384, 349);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(97, 20);
+            this.comboBox1.TabIndex = 21;
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.CustomFormat = "HH:mm";
+            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePicker1.Location = new System.Drawing.Point(487, 350);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.ShowUpDown = true;
+            this.dateTimePicker1.Size = new System.Drawing.Size(93, 19);
+            this.dateTimePicker1.TabIndex = 20;
+            // 
+            // listView2
+            // 
+            this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.currency,
+            this.time,
+            this.period,
+            this.highlow});
+            this.listView2.FullRowSelect = true;
+            this.listView2.GridLines = true;
+            this.listView2.HideSelection = false;
+            this.listView2.Location = new System.Drawing.Point(371, 15);
+            this.listView2.Name = "listView2";
+            this.listView2.RightToLeftLayout = true;
+            this.listView2.Size = new System.Drawing.Size(431, 294);
+            this.listView2.TabIndex = 19;
+            this.listView2.Tag = "";
+            this.listView2.UseCompatibleStateImageBehavior = false;
+            this.listView2.View = System.Windows.Forms.View.Details;
+            // 
+            // currency
+            // 
+            this.currency.Text = "通貨";
+            this.currency.Width = 115;
+            // 
+            // time
+            // 
+            this.time.Text = "時間";
+            this.time.Width = 93;
+            // 
+            // period
+            // 
+            this.period.Text = "取引時間";
+            this.period.Width = 148;
+            // 
+            // highlow
+            // 
+            this.highlow.Text = "取引方向";
+            this.highlow.Width = 70;
             // 
             // label15
             // 
@@ -480,6 +598,36 @@
             this.textBox_read.TabIndex = 0;
             this.textBox_read.Text = resources.GetString("textBox_read.Text");
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(727, 376);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 23;
+            this.button1.Text = "追加";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(666, 315);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(136, 23);
+            this.button2.TabIndex = 24;
+            this.button2.Text = "選択されたものを削除";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(407, 463);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 25;
+            this.button3.Text = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -553,6 +701,18 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button button_pageup;
         private System.Windows.Forms.Button button_pagedown;
+        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.ColumnHeader currency;
+        private System.Windows.Forms.ColumnHeader time;
+        private System.Windows.Forms.ColumnHeader period;
+        private System.Windows.Forms.ColumnHeader highlow;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button3;
     }
 }
 
