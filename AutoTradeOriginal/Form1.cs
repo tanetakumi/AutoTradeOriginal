@@ -54,7 +54,7 @@ namespace AutoTradeOriginal
                 settings.CefCommandLineArgs.Add("disable-gpu", "1");
                 Cef.Initialize(settings);
             }
-            browser = new ChromiumWebBrowser("https://trade.highlow.com/");
+            browser = new ChromiumWebBrowser("https://demotrade.highlow.com/");
             tabPage_browser.Controls.Add(browser);
             browser.Dock = DockStyle.Fill;
             browser.Enabled = false;
@@ -237,7 +237,6 @@ namespace AutoTradeOriginal
             {
                 cts_loop = new CancellationTokenSource();
                 await InfiniteLoopAsync(cts_loop.Token);
-                
             }
             catch
             {
@@ -334,18 +333,22 @@ namespace AutoTradeOriginal
                 //②投資
                 try
                 {
-                    
                     int repeat = Decimal.ToInt32(numericUpDown_retry.Value);
                     int retry_milsec = Decimal.ToInt32(numericUpDown_mil.Value);
                     string result = await BO.InvestHighLow(tags.currency, tags.high_low, tags.price, repeat, retry_milsec, tags.gametab, tags.period, tags.rank);
                     add_text(result);
+
                 }
                 catch (Exception ex)
                 {
                     add_text(ex.Message);
                 }
+                finally
+                {
+                    await Task.Delay(5000);
+                }
 
-                await Task.Delay(1000);
+                
             }
         }
 
@@ -407,14 +410,14 @@ namespace AutoTradeOriginal
                     
                     if(time.Hour == cur.Hour && time.Minute == cur.Minute && cur.Second == 00)
                     {
+                        Console.WriteLine("test");
                         var t = selectPeriod(item.SubItems[2].Text);
                         return (item.SubItems[0].Text, item.SubItems[3].Text, Int32.Parse(item.SubItems[4].Text), t.gametab, t.period, t.rank);
                     }
                     
                 }
-                await Task.Delay(500);
+                await Task.Delay(1000);
             }
-                
         }
     }
 }
