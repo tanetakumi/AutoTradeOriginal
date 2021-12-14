@@ -37,9 +37,7 @@ namespace AutoTradeOriginal
         //Formの初期化
         private void InitializeForm()
         {
-            this.comboBox1.SelectedIndex = 0;
-            this.comboBox2.SelectedIndex = 0;
-            this.comboBox3.SelectedIndex = 0;
+            
         }
 
         //Chromiumの初期化
@@ -54,7 +52,7 @@ namespace AutoTradeOriginal
                 settings.CefCommandLineArgs.Add("disable-gpu", "1");
                 Cef.Initialize(settings);
             }
-            browser = new ChromiumWebBrowser("https://trade.highlow.com/");
+            browser = new ChromiumWebBrowser("https://www.google.com/");
             tabPage_browser.Controls.Add(browser);
             browser.Dock = DockStyle.Fill;
             browser.Enabled = false;
@@ -135,6 +133,33 @@ namespace AutoTradeOriginal
             splitContainer1.Panel1.Enabled = true;
         }
 
+        private async Task AutoRestart(int interval, int Hour, int Minute)
+        {
+            
+            var t = Task.Factory.StartNew(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(10000, cts_restart.Token);
+                    DateTime dt = DateTime.Now;
+                    if (dt.Hour == 8 && dt.Minute == 5 && dt.Second <= 2)
+                    {
+                        return;
+                    }
+                }
+            },
+            cts_restart.Token).Unwrap().ContinueWith(async o =>
+            {
+                cts_restart.Dispose();
+                cts_restart = null;
+                if (!o.IsCanceled)
+                {
+                    add_text("8:05 自動再起動");
+                    await BO.Initialize(checkBox_real.Checked, textBox_username.Text, textBox_password.Text);
+                }
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
+        }
 
         private async void button_start_Click(object sender, EventArgs e)
         {
@@ -142,36 +167,22 @@ namespace AutoTradeOriginal
             button_stop.Enabled = false;
             splitContainer1.Panel1.Enabled = false;
 
-
-            //デモ口座の認証確認
-            if (checkBox_real.Checked)
-            {
-                DemoReal = "リアル口座";
-            }
-            if (DemoReal == "リアル口座" && !checkBox_real.Checked)
-            {
-                MessageBox.Show("リアル口座のログイン情報が残っています。\r\n再起動してください。");
-                Enable_interface();
-                return;
-            }
-
             //①初期化
             try
             {
                 tabControl1.SelectedTab = tabPage_browser;
-                label13.Text = "初期化中しばらくお待ちください";
-                await BO.Initialize(checkBox_real.Checked, textBox_username.Text, textBox_password.Text);
+                //BOの初期化処理
+
                 add_text("初期化成功");
             }
             catch (Exception a)
             {
-                add_text("初期化失敗 " + a.Message);
+                add_text("初期化失敗:" + a.Message);
                 return;
             }
             finally
             {
                 tabControl1.SelectedTab = tab_setting;
-                label13.Text = "";
                 button_stop.Enabled = true;
             }
 
@@ -328,17 +339,12 @@ namespace AutoTradeOriginal
                 //Message:  0-通貨# 1-HighLow# 2-金額倍率
                 //①メッセージの受け取り
                 add_text("待機します");
-                (string currency, string high_low, int price, int gametab, int period, int rank) tags = await WaiteForTask();
                 add_text("シグナルを受け取りました");
 
                 //②投資
                 try
                 {
-                    
-                    int repeat = Decimal.ToInt32(numericUpDown_retry.Value);
-                    int retry_milsec = Decimal.ToInt32(numericUpDown_mil.Value);
-                    string result = await BO.InvestHighLow(tags.currency, tags.high_low, tags.price, repeat, retry_milsec, tags.gametab, tags.period, tags.rank);
-                    add_text(result);
+                  
                 }
                 catch (Exception ex)
                 {
@@ -373,48 +379,6 @@ namespace AutoTradeOriginal
         private async void button_pageup_Click(object sender, EventArgs e)
         {
             await BO.Scroll(1);
-        }
-
-        //追加ボタン
-        private void button1_Click(object sender, EventArgs e)
-        {
-            listView2.Items.Add(new ListViewItem(new String[] {
-                comboBox1.SelectedItem.ToString(),
-                dateTimePicker1.Value.ToString("HH:mm"),
-                comboBox2.SelectedItem.ToString(),
-                comboBox3.SelectedItem.ToString(),
-                numericUpDown1.Value.ToString()
-            }));
-        }
-
-        //削除ボタン
-        private void button2_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem item in listView2.SelectedItems)
-            {
-                listView2.Items.Remove(item);
-            }
-        }
-
-        private async Task<(string currency, string high_low, int price, int gametab, int period, int rank)> WaiteForTask()
-        {
-            while (true)
-            {
-                DateTime cur = DateTime.Now;
-                foreach(ListViewItem item in listView2.Items)
-                {
-                    DateTime time = DateTime.Parse(item.SubItems[1].Text);
-                    
-                    if(time.Hour == cur.Hour && time.Minute == cur.Minute && cur.Second == 00)
-                    {
-                        var t = selectPeriod(item.SubItems[2].Text);
-                        return (item.SubItems[0].Text, item.SubItems[3].Text, Int32.Parse(item.SubItems[4].Text), t.gametab, t.period, t.rank);
-                    }
-                    
-                }
-                await Task.Delay(500);
-            }
-                
         }
     }
 }
