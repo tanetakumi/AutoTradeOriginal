@@ -22,15 +22,10 @@ namespace AutoTradeOriginal
         }
 
         //初期化
-        public async Task Initialize(bool real, string username, string password)
+        public async Task<bool> Initialize(bool real, string username, string password)
         {
             //HighLowが開かれるまで待機
-            browser.Load("https://trade.highlow.com/");
-            do
-            {
-                await Task.Delay(500);
-            }
-            while (browser.IsLoading);
+            await LoadPage("https://trade.highlow.com/");
 
             //リアル口座
             if (real)
@@ -41,7 +36,8 @@ namespace AutoTradeOriginal
                 //ログイン画面になるまで10秒待つ
                 if (!await waitUntilTrue(10, 1000, "document.getElementById('login-password').getAttribute('placeholder')=='パスワード'"))
                 {
-                    throw new Exception("リアル口座のログインできませんでした");
+                    Console.WriteLine("リアル口座のログインできませんでした");
+                    return false;
                 }
 
                 //username passwordを入力する
@@ -57,7 +53,8 @@ namespace AutoTradeOriginal
                 //トレードゾーンが表示されるまで待つ
                 if (!await waitUntilTrue(15, 1000, "document.getElementById('tradingZoneRegion').getAttribute('style')=='display: block;'"))
                 {
-                    throw new Exception("リアル口座のログインできませんでした");
+                    Console.WriteLine("トレードゾーンの非表示");
+                    return false;
                 }
 
             }
@@ -70,7 +67,8 @@ namespace AutoTradeOriginal
                 //切り替わるまで待機
                 if(!await waitUntilTrue(10, 1000, "document.querySelector('body > div:nth-child(8)').className.indexOf('active')>0"))
                 {
-                    throw new Exception("デモ口座のログインできませんでした0x21");
+                    Console.WriteLine("デモ口座のログインできませんでした0x21");
+                    return false;
                 }
 
                 await Task.Delay(1000);
@@ -84,9 +82,11 @@ namespace AutoTradeOriginal
                 //デモ口座での取引画面が出たか
                 if (!await waitUntilTrue(10, 1000, "document.querySelector('body > div:nth-child(8)').className == 'onboarding-overlay'"))
                 {
-                    throw new Exception("デモ口座のログインできませんでした0x21");
+                    Console.WriteLine("デモ口座のログインできませんでした0x21");
+                    return false;
                 }
             }
+            return true;
         }
 
 
@@ -193,6 +193,42 @@ namespace AutoTradeOriginal
             CefSharp.JavascriptResponse res = await browser.EvaluateScriptAsync(script);
             if (res.Success && res.Result != null) return (true, res.Result.ToString());
             else return (false, null);
+        }
+
+        public async Task<bool> LoadPage(string url)
+        {
+            browser.Load(url);
+            for (int i = 0; i < 5; i++)
+            {
+                do
+                {
+                    await Task.Delay(1000);
+                    Console.WriteLine(i.ToString() + " : Browser Loading");
+                }
+                while (browser.IsLoading);
+
+                if (browser.Address == url)
+                {
+                    Console.WriteLine("URL確認完了");
+                    if (browser.CanExecuteJavascriptInMainFrame)
+                    {
+                        Console.WriteLine("Javascript実行確認完了");
+                        string text = await browser.GetTextAsync();//textの取得
+                        if (text != "" && text != null)
+                        {
+                            Console.WriteLine("テキスト確認");
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    browser.Load(url);
+                }
+                await Task.Delay(1000);
+            }
+            Console.WriteLine("失敗しました。");
+            return false;
         }
 
         public async Task<bool> waitUntilTrue(int num, int interval, string script)

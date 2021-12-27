@@ -34,18 +34,19 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tab_setting = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.label15 = new System.Windows.Forms.Label();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.checkBox_real = new System.Windows.Forms.CheckBox();
             this.textBox_username = new System.Windows.Forms.TextBox();
             this.textBox_password = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this.numericUpDown_retry = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown_mil = new System.Windows.Forms.NumericUpDown();
+            this.button_pagedown = new System.Windows.Forms.Button();
+            this.button_pageup = new System.Windows.Forms.Button();
             this.listBox_log = new System.Windows.Forms.ListBox();
             this.label12 = new System.Windows.Forms.Label();
             this.tab_history = new System.Windows.Forms.TabPage();
@@ -60,9 +61,6 @@
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPage_browser = new System.Windows.Forms.TabPage();
-            this.button_pageup = new System.Windows.Forms.Button();
-            this.button_pagedown = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox_read = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
@@ -71,19 +69,21 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_retry)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_mil)).BeginInit();
             this.tab_history.SuspendLayout();
-            this.tabPage_browser.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_start
             // 
             this.button_start.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_start.Location = new System.Drawing.Point(105, 521);
+            this.button_start.Location = new System.Drawing.Point(51, 604);
             this.button_start.Margin = new System.Windows.Forms.Padding(2);
             this.button_start.Name = "button_start";
             this.button_start.Size = new System.Drawing.Size(96, 32);
@@ -96,7 +96,7 @@
             // 
             this.button_stop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button_stop.Enabled = false;
-            this.button_stop.Location = new System.Drawing.Point(205, 521);
+            this.button_stop.Location = new System.Drawing.Point(151, 604);
             this.button_stop.Margin = new System.Windows.Forms.Padding(2);
             this.button_stop.Name = "button_stop";
             this.button_stop.Size = new System.Drawing.Size(96, 32);
@@ -109,14 +109,13 @@
             // 
             this.tabControl1.Controls.Add(this.tab_setting);
             this.tabControl1.Controls.Add(this.tab_history);
-            this.tabControl1.Controls.Add(this.tabPage_browser);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1164, 589);
+            this.tabControl1.Size = new System.Drawing.Size(1168, 672);
             this.tabControl1.TabIndex = 16;
             // 
             // tab_setting
@@ -125,7 +124,7 @@
             this.tab_setting.Location = new System.Drawing.Point(4, 22);
             this.tab_setting.Name = "tab_setting";
             this.tab_setting.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_setting.Size = new System.Drawing.Size(1156, 563);
+            this.tab_setting.Size = new System.Drawing.Size(1160, 646);
             this.tab_setting.TabIndex = 0;
             this.tab_setting.Text = "設定";
             this.tab_setting.UseVisualStyleBackColor = true;
@@ -138,9 +137,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.label15);
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox5);
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox4);
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
             // 
             // splitContainer1.Panel2
             // 
@@ -148,18 +145,31 @@
             this.splitContainer1.Panel2.Controls.Add(this.button_stop);
             this.splitContainer1.Panel2.Controls.Add(this.button_start);
             this.splitContainer1.Panel2.Controls.Add(this.label12);
-            this.splitContainer1.Size = new System.Drawing.Size(1150, 557);
-            this.splitContainer1.SplitterDistance = 830;
+            this.splitContainer1.Size = new System.Drawing.Size(1154, 640);
+            this.splitContainer1.SplitterDistance = 888;
             this.splitContainer1.TabIndex = 19;
             // 
-            // label15
+            // splitContainer2
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(23, 355);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(50, 12);
-            this.label15.TabIndex = 18;
-            this.label15.Text = "バージョン";
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.groupBox5);
+            this.splitContainer2.Panel1.Controls.Add(this.label15);
+            this.splitContainer2.Panel1.Controls.Add(this.groupBox4);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.button_pagedown);
+            this.splitContainer2.Panel2.Controls.Add(this.button_pageup);
+            this.splitContainer2.Size = new System.Drawing.Size(888, 640);
+            this.splitContainer2.SplitterDistance = 96;
+            this.splitContainer2.TabIndex = 19;
             // 
             // groupBox5
             // 
@@ -168,9 +178,9 @@
             this.groupBox5.Controls.Add(this.textBox_password);
             this.groupBox5.Controls.Add(this.label2);
             this.groupBox5.Controls.Add(this.label1);
-            this.groupBox5.Location = new System.Drawing.Point(14, 15);
+            this.groupBox5.Location = new System.Drawing.Point(3, 3);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(332, 180);
+            this.groupBox5.Size = new System.Drawing.Size(332, 90);
             this.groupBox5.TabIndex = 17;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "ユーザー設定";
@@ -178,7 +188,7 @@
             // checkBox_real
             // 
             this.checkBox_real.AutoSize = true;
-            this.checkBox_real.Location = new System.Drawing.Point(11, 48);
+            this.checkBox_real.Location = new System.Drawing.Point(11, 19);
             this.checkBox_real.Name = "checkBox_real";
             this.checkBox_real.Size = new System.Drawing.Size(108, 16);
             this.checkBox_real.TabIndex = 15;
@@ -187,7 +197,7 @@
             // 
             // textBox_username
             // 
-            this.textBox_username.Location = new System.Drawing.Point(111, 77);
+            this.textBox_username.Location = new System.Drawing.Point(109, 36);
             this.textBox_username.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_username.Name = "textBox_username";
             this.textBox_username.Size = new System.Drawing.Size(212, 19);
@@ -195,7 +205,7 @@
             // 
             // textBox_password
             // 
-            this.textBox_password.Location = new System.Drawing.Point(111, 98);
+            this.textBox_password.Location = new System.Drawing.Point(109, 57);
             this.textBox_password.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_password.Name = "textBox_password";
             this.textBox_password.Size = new System.Drawing.Size(212, 19);
@@ -206,7 +216,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("MS UI Gothic", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(24, 100);
+            this.label2.Location = new System.Drawing.Point(22, 59);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(64, 15);
@@ -217,22 +227,29 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("MS UI Gothic", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(24, 79);
+            this.label1.Location = new System.Drawing.Point(22, 38);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 15);
             this.label1.TabIndex = 5;
             this.label1.Text = "ユーザー名";
             // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(574, 81);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(50, 12);
+            this.label15.TabIndex = 18;
+            this.label15.Text = "バージョン";
+            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Controls.Add(this.numericUpDown_retry);
-            this.groupBox4.Controls.Add(this.numericUpDown_mil);
-            this.groupBox4.Location = new System.Drawing.Point(14, 201);
+            this.groupBox4.Location = new System.Drawing.Point(341, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(332, 108);
+            this.groupBox4.Size = new System.Drawing.Size(227, 90);
             this.groupBox4.TabIndex = 16;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "取引基本設定";
@@ -240,25 +257,15 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(33, 38);
+            this.label6.Location = new System.Drawing.Point(23, 36);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(61, 12);
             this.label6.TabIndex = 14;
             this.label6.Text = "購入リトライ";
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("MS UI Gothic", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label10.Location = new System.Drawing.Point(23, 73);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(86, 11);
-            this.label10.TabIndex = 5;
-            this.label10.Text = "再購入までの㍉秒";
-            // 
             // numericUpDown_retry
             // 
-            this.numericUpDown_retry.Location = new System.Drawing.Point(100, 36);
+            this.numericUpDown_retry.Location = new System.Drawing.Point(90, 34);
             this.numericUpDown_retry.Maximum = new decimal(new int[] {
             10,
             0,
@@ -278,32 +285,29 @@
             0,
             0});
             // 
-            // numericUpDown_mil
+            // button_pagedown
             // 
-            this.numericUpDown_mil.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericUpDown_mil.Location = new System.Drawing.Point(112, 69);
-            this.numericUpDown_mil.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDown_mil.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericUpDown_mil.Name = "numericUpDown_mil";
-            this.numericUpDown_mil.Size = new System.Drawing.Size(66, 19);
-            this.numericUpDown_mil.TabIndex = 4;
-            this.numericUpDown_mil.Value = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
+            this.button_pagedown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_pagedown.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button_pagedown.Location = new System.Drawing.Point(863, 109);
+            this.button_pagedown.Name = "button_pagedown";
+            this.button_pagedown.Size = new System.Drawing.Size(22, 65);
+            this.button_pagedown.TabIndex = 1;
+            this.button_pagedown.Text = "⇩";
+            this.button_pagedown.UseVisualStyleBackColor = true;
+            this.button_pagedown.Click += new System.EventHandler(this.button_pagedown_Click);
+            // 
+            // button_pageup
+            // 
+            this.button_pageup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_pageup.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button_pageup.Location = new System.Drawing.Point(863, 38);
+            this.button_pageup.Name = "button_pageup";
+            this.button_pageup.Size = new System.Drawing.Size(22, 65);
+            this.button_pageup.TabIndex = 1;
+            this.button_pageup.Text = "⇧";
+            this.button_pageup.UseVisualStyleBackColor = true;
+            this.button_pageup.Click += new System.EventHandler(this.button_pageup_Click);
             // 
             // listBox_log
             // 
@@ -315,7 +319,7 @@
             this.listBox_log.ItemHeight = 12;
             this.listBox_log.Location = new System.Drawing.Point(3, 34);
             this.listBox_log.Name = "listBox_log";
-            this.listBox_log.Size = new System.Drawing.Size(310, 472);
+            this.listBox_log.Size = new System.Drawing.Size(256, 544);
             this.listBox_log.TabIndex = 12;
             // 
             // label12
@@ -333,7 +337,7 @@
             this.tab_history.Location = new System.Drawing.Point(4, 22);
             this.tab_history.Name = "tab_history";
             this.tab_history.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_history.Size = new System.Drawing.Size(1156, 563);
+            this.tab_history.Size = new System.Drawing.Size(1160, 646);
             this.tab_history.TabIndex = 1;
             this.tab_history.Text = "取引履歴";
             this.tab_history.UseVisualStyleBackColor = true;
@@ -356,7 +360,7 @@
             this.listView1.Location = new System.Drawing.Point(3, 3);
             this.listView1.Margin = new System.Windows.Forms.Padding(2);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(1150, 557);
+            this.listView1.Size = new System.Drawing.Size(1154, 640);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -411,49 +415,13 @@
             this.columnHeader8.Text = "判定時ペイアウト";
             this.columnHeader8.Width = 100;
             // 
-            // tabPage_browser
-            // 
-            this.tabPage_browser.Controls.Add(this.button_pageup);
-            this.tabPage_browser.Controls.Add(this.button_pagedown);
-            this.tabPage_browser.Location = new System.Drawing.Point(4, 22);
-            this.tabPage_browser.Name = "tabPage_browser";
-            this.tabPage_browser.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_browser.Size = new System.Drawing.Size(1156, 563);
-            this.tabPage_browser.TabIndex = 2;
-            this.tabPage_browser.Text = "ブラウザ";
-            this.tabPage_browser.UseVisualStyleBackColor = true;
-            // 
-            // button_pageup
-            // 
-            this.button_pageup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_pageup.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button_pageup.Location = new System.Drawing.Point(1126, 66);
-            this.button_pageup.Name = "button_pageup";
-            this.button_pageup.Size = new System.Drawing.Size(22, 65);
-            this.button_pageup.TabIndex = 1;
-            this.button_pageup.Text = "⇧";
-            this.button_pageup.UseVisualStyleBackColor = true;
-            this.button_pageup.Click += new System.EventHandler(this.button_pageup_Click);
-            // 
-            // button_pagedown
-            // 
-            this.button_pagedown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_pagedown.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button_pagedown.Location = new System.Drawing.Point(1126, 141);
-            this.button_pagedown.Name = "button_pagedown";
-            this.button_pagedown.Size = new System.Drawing.Size(22, 65);
-            this.button_pagedown.TabIndex = 1;
-            this.button_pagedown.Text = "⇩";
-            this.button_pagedown.UseVisualStyleBackColor = true;
-            this.button_pagedown.Click += new System.EventHandler(this.button_pagedown_Click);
-            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.textBox_read);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1156, 563);
+            this.tabPage2.Size = new System.Drawing.Size(1160, 646);
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "注意事項";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -471,7 +439,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1164, 589);
+            this.ClientSize = new System.Drawing.Size(1168, 672);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -482,19 +450,21 @@
             this.tabControl1.ResumeLayout(false);
             this.tab_setting.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_retry)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_mil)).EndInit();
             this.tab_history.ResumeLayout(false);
-            this.tabPage_browser.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
@@ -526,9 +496,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.NumericUpDown numericUpDown_mil;
-        private System.Windows.Forms.TabPage tabPage_browser;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox textBox_read;
@@ -538,6 +505,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button button_pageup;
         private System.Windows.Forms.Button button_pagedown;
+        private System.Windows.Forms.SplitContainer splitContainer2;
     }
 }
 
