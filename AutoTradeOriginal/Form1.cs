@@ -332,7 +332,7 @@ namespace AutoTradeOriginal
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("その他の例外\n"+e.ToString());
+                    logbox("その他の例外\n"+e.ToString());
                 }
                 if (ct.IsCancellationRequested)
                 {
