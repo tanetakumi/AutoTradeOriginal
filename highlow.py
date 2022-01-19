@@ -12,33 +12,15 @@ import re
 from bs4 import BeautifulSoup
 
 
-class IndexPageObject:
-    # Seleniumで探す要素をクラス定数として定義する
-    Turbo       = (By.ID, 'ChangingStrikeOOD0')
-    HighLow     = (By.ID, 'ChangingStrike0')
-    TurboSp     = (By.ID, 'FixedPayoutHLOOD0')
-    HighLowSp   = (By.ID, 'FixedPayoutHL0')
-    Period = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div')
-    Currency = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[1]/div[1]/div[1]/div[4]/div[3]/div[1]/div')
-    CurrencyInput = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[1]/div[1]/div[1]/div[4]/div[3]/div[2]/div/div[1]/div/input')
 
-    HighEntry = (By.XPATH, '//*[@id="TradePanel_oneClickHighButton__3OAFf"]/div/div[2]')
-
-    OneClick = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[2]/div/div[2]/div/div[2]/div[1]/div')
-
-    Input   = (By.CLASS_NAME, 'MoneyInputField_amount__6JeTs')
-    CLASS1  = (By.CLASS_NAME, 'post1')
-    CLASS2  = (By.CLASS_NAME, 'post2')
-    CLASS3  = (By.CLASS_NAME, 'post3')  # これは存在しない要素
-    CSS     = (By.CSS_SELECTOR, '.post1')
-    XPATH   = (By.XPATH, '//li[@class="post1"]')
 
 class Browser:
-    def __init__(self,headress = False) -> None:
+    def __init__(self, headress = False, log_option = True) -> None:
         # create options
         options = Options()
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        options.use_chromium = True
+        if log_option:
+            options.add_experimental_option('excludeSwitches', ['enable-logging'])
+            options.use_chromium = True
         if headress:
             options.add_argument('--headless')
 
@@ -48,6 +30,8 @@ class Browser:
         # driver
         self.driver = webdriver.Chrome(service = chrome_service, options=options)
 
+    def __del__(self):
+        self.driver.quit()
 
     def open_first_page(self):
         print("open first page")
@@ -56,17 +40,17 @@ class Browser:
     def click_element(self):
         # print("click")
 
-        self.driver.find_element(*IndexPageObject.Period).click()
+        self.driver.find_element(*self.IndexPageObject.Period).click()
         self.driver.find_element(By.ID, '30000').click()
         time.sleep(0.5)
-        self.driver.find_element(*IndexPageObject.Currency).click()
-        self.driver.find_element(*IndexPageObject.CurrencyInput).send_keys('EURUSD')
+        self.driver.find_element(*self.IndexPageObject.Currency).click()
+        self.driver.find_element(*self.IndexPageObject.CurrencyInput).send_keys('EURUSD')
         self.driver.find_element(By.ID, 'EUR/USD').click()
         time.sleep(0.5)
-        self.driver.find_element(*IndexPageObject.HighEntry).click()
+        self.driver.find_element(*self.IndexPageObject.HighEntry).click()
 
     def enable_oneclick(self):
-        oneclick_element = self.driver.find_element(*IndexPageObject.OneClick)
+        oneclick_element = self.driver.find_element(*self.IndexPageObject.OneClick)
         data_test_value = oneclick_element.get_attribute('data-test')
         if re.search('Enable',data_test_value):
             print("すでにワンクリック注文は有効でした。")
@@ -82,7 +66,12 @@ class Browser:
             print(period)
             return False
         
-        
+    def reset_tab(self):
+        parent = self.driver.find_element(*IndexPageObject.Tab)
+        children = parent.find_elements(By.XPATH, './child::*')
+        print(len(children))
+        for c in children:
+            print(c.get_attribute('class'))
         
 
         
@@ -142,6 +131,28 @@ class Browser:
         
         return res
         
+    class IndexPageObject:
+        # Seleniumで探す要素をクラス定数として定義する
+        Turbo       = (By.ID, 'ChangingStrikeOOD0')
+        HighLow     = (By.ID, 'ChangingStrike0')
+        TurboSp     = (By.ID, 'FixedPayoutHLOOD0')
+        HighLowSp   = (By.ID, 'FixedPayoutHL0')
+        Period      = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div')
+        Currency    = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[1]/div[1]/div[1]/div[4]/div[3]/div[1]/div')
+        CurrencyInput = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[1]/div[1]/div[1]/div[4]/div[3]/div[2]/div/div[1]/div/input')
+
+        HighEntry = (By.XPATH, '//*[@id="TradePanel_oneClickHighButton__3OAFf"]/div/div[2]')
+
+        OneClick = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[2]/div/div[2]/div/div[2]/div[1]/div')
+
+        Tab = (By.ID, 'content_1')
+        Input   = (By.CLASS_NAME, 'MoneyInputField_amount__6JeTs')
+        CLASS1  = (By.CLASS_NAME, 'post1')
+        CLASS2  = (By.CLASS_NAME, 'post2')
+        CLASS3  = (By.CLASS_NAME, 'post3')  # これは存在しない要素
+        CSS     = (By.CSS_SELECTOR, '.post1')
+        XPATH   = (By.XPATH, '//li[@class="post1"]')
+
 
 def javascript():
     options = Options()
@@ -174,6 +185,11 @@ if __name__ == "__main__":
 
     time.sleep(10)
 
-    browser.enable_oneclick()
-    time.sleep(1)
-    browser.click_element()
+    # browser.enable_oneclick()
+    # time.sleep(1)
+    # browser.click_element()
+    browser.reset_tab()
+    print("reset")
+    time.sleep(5)
+    print("delete")
+    del browser
