@@ -61,6 +61,10 @@ namespace AutoTradeOriginal
             //デモ口座
             else
             {
+                //デモ口座URL
+                await LoadPage("https://app.highlow.com/quick-demo?source=header-quick-demo-cta");
+
+                /*
                 //クイックデモ クリック
                 await browser.EvaluateScriptAsync("document.querySelector('#header > div > div > div > div > div > span > span > a > i').click()");
 
@@ -85,6 +89,7 @@ namespace AutoTradeOriginal
                     Console.WriteLine("デモ口座のログインできませんでした0x21");
                     return false;
                 }
+                */
             }
             return true;
         }

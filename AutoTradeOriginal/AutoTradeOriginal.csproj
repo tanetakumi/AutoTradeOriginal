@@ -151,6 +151,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrowserOperation.cs" />
+    <Compile Include="HighLow.cs" />
+    <Compile Include="OperateBrowser.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
