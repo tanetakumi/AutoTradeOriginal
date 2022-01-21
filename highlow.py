@@ -17,21 +17,36 @@ from bs4 import BeautifulSoup
 class Browser:
     def __init__(self, headress = False, log_option = True) -> None:
         # create options
-        options = Options()
+        self.options = Options()
         if log_option:
-            options.add_experimental_option('excludeSwitches', ['enable-logging'])
-            options.use_chromium = True
+            self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
+            self.options.use_chromium = True
         if headress:
-            options.add_argument('--headless')
-
+            self.options.add_argument('--headless')
+            
+        self.options.add_argument('--disable-gpu')
+        self.options.add_argument('--window-size=1280,1080')
+        self.options.add_argument('--ignore-certificate-errors')
+        self.options.add_argument('--disable-dev-shm-usage')
+        self.options.add_argument('--allow-running-insecure-content')
+        self.options.add_argument('--disable-extensions') 
+        self.options.add_argument('--no-sandbox')
+        self.options.add_argument('--proxy-server="direct://"') # Proxy経由ではなく直接接続する
+        self.options.add_argument('--proxy-bypass-list=*')      # すべてのホスト名
+        # self.options.add_argument('--trace-startup=*,disabled-by-default-memory-infra')          # 起動時にウィンドウを最大化する
         # create driver services
-        chrome_service = fs.Service(ChromeDriverManager().install())
-
-        # driver
-        self.driver = webdriver.Chrome(service = chrome_service, options=options)
+        self.chrome_service = fs.Service(ChromeDriverManager().install())
+        
+    def start(self) -> None:
+        self.driver = webdriver.Chrome(service = self.chrome_service, options = self.options)
+    
+    def quit(self) -> None:
+        self.driver.quit()
+        self.driver = None
 
     def __del__(self):
-        self.driver.quit()
+        if self.driver != None:
+            self.driver.quit()
 
     def open_first_page(self):
         print("open first page")
@@ -45,9 +60,12 @@ class Browser:
         time.sleep(0.5)
         self.driver.find_element(*self.IndexPageObject.Currency).click()
         self.driver.find_element(*self.IndexPageObject.CurrencyInput).send_keys('EURUSD')
+        
         self.driver.find_element(By.ID, 'EUR/USD').click()
-        time.sleep(0.5)
-        self.driver.find_element(*self.IndexPageObject.HighEntry).click()
+        time.sleep(1.5)
+        self.driver.find_element(*self.IndexPageObject.PriceInput).send_keys('4232')
+        
+        # self.driver.find_element(*self.IndexPageObject.HighEntry).click()
 
     def enable_oneclick(self):
         oneclick_element = self.driver.find_element(*self.IndexPageObject.OneClick)
@@ -67,12 +85,14 @@ class Browser:
             return False
         
     def reset_tab(self):
-        parent = self.driver.find_element(*IndexPageObject.Tab)
+        parent = self.driver.find_element(*self.IndexPageObject.Tab)
         children = parent.find_elements(By.XPATH, './child::*')
         print(len(children))
         for c in children:
             print(c.get_attribute('class'))
         
+    def screenshot(self):
+        self.driver.save_screenshot("test.png")
 
         
     def get_period_number(self, period : str):
@@ -140,7 +160,7 @@ class Browser:
         Period      = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div')
         Currency    = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[1]/div[1]/div[1]/div[4]/div[3]/div[1]/div')
         CurrencyInput = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[1]/div[1]/div[1]/div[4]/div[3]/div[2]/div/div[1]/div/input')
-
+        PriceInput = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div/input')
         HighEntry = (By.XPATH, '//*[@id="TradePanel_oneClickHighButton__3OAFf"]/div/div[2]')
 
         OneClick = (By.XPATH, '//*[@id="App_mainContainer__2JivZ"]/div[1]/div[2]/div/div[2]/div/div[2]/div[1]/div')
@@ -178,18 +198,16 @@ def javascript():
 
 
 if __name__ == "__main__":
-    browser = Browser()
-    print("browser init")
+    browser = Browser(headress=True)
+    # browser = Browser()
+    browser.start()
 
     browser.open_first_page()
 
     time.sleep(10)
-
-    # browser.enable_oneclick()
-    # time.sleep(1)
-    # browser.click_element()
-    browser.reset_tab()
-    print("reset")
+    browser.click_element()
     time.sleep(5)
-    print("delete")
+    browser.screenshot()
+    time.sleep(6)
+    browser.quit()
     del browser
