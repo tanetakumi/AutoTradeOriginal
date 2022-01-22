@@ -97,5 +97,15 @@ namespace AutoTradeOriginal
                 }
             }
         }
+
+        public void sendKeyEventChar(int keyCode)
+        {
+            KeyEvent k = new KeyEvent();
+            k.WindowsKeyCode = keyCode;
+            k.FocusOnEditableField = true;
+            k.IsSystemKey = false;
+            k.Type = KeyEventType.Char;
+            browser.GetBrowser().GetHost().SendKeyEvent(k);
+        }
     }
 }

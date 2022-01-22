@@ -57,6 +57,9 @@ namespace AutoTradeOriginal
                 //デモ口座URL
                 await LoadPage("https://app.highlow.com/quick-demo?source=header-quick-demo-cta");
 
+                await Task.Delay(10000);
+                //広告の削除
+                await browser.EvaluateScriptAsync("document.getElementsByClassName('SecondaryBanner_closeButton__1iz3l')[1].click()");
                 /*
                 //クイックデモ クリック
                 await browser.EvaluateScriptAsync("document.querySelector('#header > div > div > div > div > div > span > span > a > i').click()");
@@ -86,5 +89,31 @@ namespace AutoTradeOriginal
             }
             return true;
         }
+
+        public async Task resetTab()
+        {
+            await browser.EvaluateScriptAsync(
+                "var num = document.getElementById('content_1').children.length;" + 
+                "for (let i = num - 1; i > 0; i--){" +
+                    "document.getElementsByClassName('RecentlyOpenOptions_tabClose__2EbqE')[i].click();" + 
+                "}");
+        }
+
+        public async Task selectPeriod()
+        {
+            await browser.EvaluateScriptAsync("document.getElementById('ChangingStrikeOOD0').click();");
+            await browser.EvaluateScriptAsync("document.getElementById('ChangingStrike0').click();");
+            await browser.EvaluateScriptAsync("document.getElementById('FixedPayoutHLOOD0').click();");
+            await browser.EvaluateScriptAsync("document.getElementById('FixedPayoutHL0').click();");
+
+            await browser.EvaluateScriptAsync("document.getElementById('30000').click();");
+            await browser.EvaluateScriptAsync("document.getElementById('60000').click();");
+            await browser.EvaluateScriptAsync("document.getElementById('180000').click();");
+            await browser.EvaluateScriptAsync("document.getElementById('300000').click();");
+            await browser.EvaluateScriptAsync("document.getElementById('900000').click();");
+            await browser.EvaluateScriptAsync("document.getElementById('3600000').click();");
+            await browser.EvaluateScriptAsync("document.getElementById('86400000').click();");
+        }
+
     }
 }

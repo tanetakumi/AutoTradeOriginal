@@ -10,6 +10,7 @@ using CefSharp.WinForms;
 using CefSharp;
 using System.IO.Pipes;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace AutoTradeOriginal
 {
@@ -53,7 +54,7 @@ namespace AutoTradeOriginal
             browser = new ChromiumWebBrowser("https://www.google.com/");
             splitContainer2.Panel2.Controls.Add(browser);
             browser.Dock = DockStyle.Fill;
-            browser.Enabled = false;
+            browser.Enabled = true;
 
             BO = new BrowserOperation(browser);
         }
@@ -126,37 +127,77 @@ namespace AutoTradeOriginal
             button_start.Enabled = true;
             splitContainer1.Panel1.Enabled = true;
         }
-
         private async void button_start_Click(object sender, EventArgs e)
         {
 
             InitializeChromium();
-            await Task.Delay(3000);
-            button_start.Enabled = false;
-            button_stop.Enabled = false;
-            splitContainer2.Panel1.Enabled = false;
+            await BO.LoadPage("https://app.highlow.com/quick-demo?source=header-quick-demo-cta");
+            await Task.Delay(10000);
 
-            //BOの初期化処理
-            if(await BO.Initialize(checkBox_real.Checked, textBox_username.Text, textBox_password.Text))
-            {
-                logbox("初期化成功");
-                Console.WriteLine("初期化成功");
-                button_stop.Enabled = true;
-            }
-            else
-            {
-                logbox("初期化失敗");
-                button_start.Enabled = true;
-                return;
-            }
+            Console.WriteLine("excute");
+            
+            var res = await BO.getResultFromScript("var element = document.getElementById('content_1').children[1].getElementsByTagName('svg')[1];" +
+                                        "var cr = element.getBoundingClientRect();" +
+            "(window.pageXOffset + cr.left + cr.width / 2).toString() + ':' + (window.pageYOffset + cr.top + cr.height / 2).toString();");
 
-            cts_loop = new CancellationTokenSource();
-            //タスク①　8:05再起動(別スレッド)
-            restart(cts_loop.Token);
-            //タスク②　履歴取得(別スレッド)
-            history(cts_loop.Token);
-            //投資ループ
-            await InfiniteLoopAsync(cts_loop.Token);
+            Console.WriteLine(res.result);
+            Console.WriteLine(res.text);
+            /*
+            BO.browser.GetBrowser().GetHost().SendMouseMoveEvent(x, y, false, CefEventFlags.None);
+            await Task.Delay(50);
+            Console.WriteLine("click");
+            BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.LeftMouseButton);
+            await Task.Delay(50);
+            BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.LeftMouseButton);
+            await Task.Delay(50);*/
+            /*
+            await BO.getResultFromScript("document.getElementsByClassName('MoneyInputField_amount__6JeTs')[0].focus();");
+            
+            BO.sendKeyEventChar(50);
+            await Task.Delay(50);
+            BO.sendKeyEventChar(50);
+            await Task.Delay(50);
+            //BO.sendKeyEventChar(37);
+            BO.sendKeyEventChar(8);
+            BO.sendKeyEventChar(1);
+            BO.sendKeyEventChar(46);
+            BO.sendKeyEventChar(45);*/
+            //document.getElementsByClassName('MoneyInputField_amount__6JeTs')[0].getBoundingClientRect()
+            /*
+            JavascriptResponse res = await BO.browser.EvaluateScriptAsync(
+                "document.getElementsByClassName('MoneyInputField_amount__6JeTs')[0].getBoundingClientRect();"
+            );
+            Console.WriteLine(res.Success);
+            System.Dynamic.ExpandoObject abc = (System.Dynamic.ExpandoObject)res.Result;
+            foreach (KeyValuePair<string, object> item in abc)
+            {
+                string key = item.Key.ToString();
+                Console.WriteLine(key);
+                Console.WriteLine(item.Value);
+            }*/
+            /*
+            for (int i = 0; i < 30; i++)
+            {
+                // send mouse move event
+                BO.browser.GetBrowser().GetHost().SendMouseMoveEvent(x, y, false, CefEventFlags.None);
+                await Task.Delay(50);
+                Console.WriteLine("click");
+                BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.LeftMouseButton);
+                await Task.Delay(50);
+                BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.LeftMouseButton);
+                await Task.Delay(50);
+                x += 10;
+                y += 10;
+            }*/
+
+
+
+            //BO.sendKeyEventChar(37);
+            //BO.sendKeyEventChar(1);
+            //BO.sendKeyEventChar(2);
+            //BO.sendKeyEventChar(49);
+            //BO.sendKeyEventChar(50);
+
         }
 
         private async Task<string> WaitForNamedpipe(string pipename, CancellationToken ct)
@@ -476,6 +517,19 @@ namespace AutoTradeOriginal
                     break;
             }
             return tuple;
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            int x = Decimal.ToInt32(numericUpDown1.Value);
+            int y = Decimal.ToInt32(numericUpDown2.Value);
+            BO.browser.GetBrowser().GetHost().SendMouseMoveEvent(x, y, false, CefEventFlags.None);
+            await Task.Delay(50);
+            Console.WriteLine("click");
+            BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.LeftMouseButton);
+            await Task.Delay(50);
+            BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.LeftMouseButton);
+            await Task.Delay(50);
         }
     }
 }

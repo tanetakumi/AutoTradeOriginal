@@ -1,6 +1,11 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
+using Codeer.Friendly.Dynamic;
+using Codeer.Friendly.Windows;
+using Codeer.Friendly.Windows.Grasp;
+using Selenium.CefSharp.Driver;
 using System;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -8,7 +13,9 @@ namespace AutoTradeOriginal
 {
     class BrowserOperation
     {
-        private ChromiumWebBrowser browser;
+        public ChromiumWebBrowser browser;
+        WindowsAppFriend _app;
+        CefSharpDriver _driver;
 
         public BrowserOperation(ChromiumWebBrowser _browser)
         {
@@ -195,7 +202,7 @@ namespace AutoTradeOriginal
 
         public async Task<(bool result, string text)> getResultFromScript(string script)
         {
-            CefSharp.JavascriptResponse res = await browser.EvaluateScriptAsync(script);
+            JavascriptResponse res = await browser.EvaluateScriptAsync(script);
             if (res.Success && res.Result != null) return (true, res.Result.ToString());
             else return (false, null);
         }
@@ -342,6 +349,16 @@ namespace AutoTradeOriginal
             string res = (await getResultFromScript(scr)).text;
             if (res == "False" || res == null) return false;
             else return true;
+        }
+
+        public void sendKeyEventChar(int keyCode)
+        {
+            KeyEvent k = new KeyEvent();
+            k.WindowsKeyCode = keyCode;
+            k.FocusOnEditableField = true;
+            k.IsSystemKey = false;
+            k.Type = KeyEventType.Char;
+            browser.GetBrowser().GetHost().SendKeyEvent(k);
         }
     }
 }
