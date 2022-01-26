@@ -19,17 +19,15 @@ namespace AutoTradeOriginal
     {
         
         private CancellationTokenSource cts_loop = null;
-        private List<List<string>> history_list = new List<List<string>>();
         private string DemoReal = "デモ口座";
-        private BrowserOperation BO;
-
-        public ChromiumWebBrowser browser = null;
+        private HighLow BO;
+        private ChromiumWebBrowser browser = null;
 
         //-----------------------------------------------------------
         public Form1()
         {
             InitializeComponent();
-            //InitializeChromium();
+            InitializeChromium();
             Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
             
         }
@@ -56,15 +54,12 @@ namespace AutoTradeOriginal
             browser.Dock = DockStyle.Fill;
             browser.Enabled = true;
 
-            BO = new BrowserOperation(browser);
+            BO = new HighLow(browser);
         }
 
         //電源周りの設定
         private void SystemEvents_PowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
         {
-            //----------------------
-            // 電源状態を画面に表示
-            //----------------------
             switch (e.Mode)
             {
                 case Microsoft.Win32.PowerModes.Suspend:
@@ -129,74 +124,10 @@ namespace AutoTradeOriginal
         }
         private async void button_start_Click(object sender, EventArgs e)
         {
-
-            InitializeChromium();
-            await BO.LoadPage("https://app.highlow.com/quick-demo?source=header-quick-demo-cta");
+            await BO.Initialize();
             await Task.Delay(10000);
+            await BO.inputPrice(42213);
 
-            Console.WriteLine("excute");
-            
-            var res = await BO.getResultFromScript("var element = document.getElementById('content_1').children[1].getElementsByTagName('svg')[1];" +
-                                        "var cr = element.getBoundingClientRect();" +
-            "(window.pageXOffset + cr.left + cr.width / 2).toString() + ':' + (window.pageYOffset + cr.top + cr.height / 2).toString();");
-
-            Console.WriteLine(res.result);
-            Console.WriteLine(res.text);
-            /*
-            BO.browser.GetBrowser().GetHost().SendMouseMoveEvent(x, y, false, CefEventFlags.None);
-            await Task.Delay(50);
-            Console.WriteLine("click");
-            BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.LeftMouseButton);
-            await Task.Delay(50);
-            BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.LeftMouseButton);
-            await Task.Delay(50);*/
-            /*
-            await BO.getResultFromScript("document.getElementsByClassName('MoneyInputField_amount__6JeTs')[0].focus();");
-            
-            BO.sendKeyEventChar(50);
-            await Task.Delay(50);
-            BO.sendKeyEventChar(50);
-            await Task.Delay(50);
-            //BO.sendKeyEventChar(37);
-            BO.sendKeyEventChar(8);
-            BO.sendKeyEventChar(1);
-            BO.sendKeyEventChar(46);
-            BO.sendKeyEventChar(45);*/
-            //document.getElementsByClassName('MoneyInputField_amount__6JeTs')[0].getBoundingClientRect()
-            /*
-            JavascriptResponse res = await BO.browser.EvaluateScriptAsync(
-                "document.getElementsByClassName('MoneyInputField_amount__6JeTs')[0].getBoundingClientRect();"
-            );
-            Console.WriteLine(res.Success);
-            System.Dynamic.ExpandoObject abc = (System.Dynamic.ExpandoObject)res.Result;
-            foreach (KeyValuePair<string, object> item in abc)
-            {
-                string key = item.Key.ToString();
-                Console.WriteLine(key);
-                Console.WriteLine(item.Value);
-            }*/
-            /*
-            for (int i = 0; i < 30; i++)
-            {
-                // send mouse move event
-                BO.browser.GetBrowser().GetHost().SendMouseMoveEvent(x, y, false, CefEventFlags.None);
-                await Task.Delay(50);
-                Console.WriteLine("click");
-                BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.LeftMouseButton);
-                await Task.Delay(50);
-                BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.LeftMouseButton);
-                await Task.Delay(50);
-                x += 10;
-                y += 10;
-            }*/
-
-
-
-            //BO.sendKeyEventChar(37);
-            //BO.sendKeyEventChar(1);
-            //BO.sendKeyEventChar(2);
-            //BO.sendKeyEventChar(49);
-            //BO.sendKeyEventChar(50);
 
         }
 
@@ -272,52 +203,10 @@ namespace AutoTradeOriginal
 
             var _ = Task.Run(async () =>
             {
-                Console.WriteLine("履歴取得スレッド開始します。");
-                bool pr = true;
                 while (true)
                 {
                     try
                     {
-                        await Task.Delay(1000, ct);
-                        int sec = DateTime.Now.Second;
-                        if (sec > 30 && !pr)
-                        {
-                            Invoke(new Action(async () =>
-                            {
-                                string text = await BO.get_history();
-                                if (text != "" && text != null)
-                                {
-                                    string[] data = text.Remove(text.Length - 1, 1).Split('*');
-                                    string[][] history = new string[data.Length][];
-                                    for (int i = data.Length - 1; i >= 0; i--)
-                                    {
-                                        history[i] = data[i].Remove(data[i].Length - 1, 1).Split('#');
-                                        if (history[i][5] == "取引終了")
-                                        {
-                                            if (history[i][1].IndexOf("PutMarker") > 0) history[i][1] = "Low";
-                                            else if (history[i][1].IndexOf("CallMarker") > 0) history[i][1] = "High";
-                                            List<string> hList = new List<string>(history[i]);
-                                            hList.Insert(0, DemoReal);
-                                            bool IsExist = false;
-                                            for (int j = 0; j < history_list.Count; j++)
-                                            {
-                                                if (hList.SequenceEqual(history_list[j]))
-                                                {
-                                                    IsExist = true;
-                                                }
-                                            }
-                                            if (!IsExist)
-                                            {
-                                                listView1.Items.Insert(0, new ListViewItem(hList.ToArray()));
-                                                history_list.Add(hList);
-                                            }
-                                        }
-                                    }
-                                }
-                            }));
-                            pr = true;
-                        }
-                        if (sec <= 30) pr = false;
                     }
                     catch (TaskCanceledException)
                     {
@@ -360,7 +249,7 @@ namespace AutoTradeOriginal
                     (string currency, string high_low, int price, int gametab, int period, int rank) = MessageToTuple(mes);
                     int repeat = Decimal.ToInt32(numericUpDown_retry.Value);
                     int retry_milsec = 500;
-                    string result = await BO.InvestHighLow(currency, high_low, price, repeat, retry_milsec, gametab, period, rank);
+                    //string result = await BO.InvestHighLow(currency, high_low, price, repeat, retry_milsec, gametab, period, rank);
                     await Task.Delay(1000, ct);
                 }
                 catch (TaskCanceledException)
@@ -517,19 +406,6 @@ namespace AutoTradeOriginal
                     break;
             }
             return tuple;
-        }
-
-        private async void button1_Click(object sender, EventArgs e)
-        {
-            int x = Decimal.ToInt32(numericUpDown1.Value);
-            int y = Decimal.ToInt32(numericUpDown2.Value);
-            BO.browser.GetBrowser().GetHost().SendMouseMoveEvent(x, y, false, CefEventFlags.None);
-            await Task.Delay(50);
-            Console.WriteLine("click");
-            BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.LeftMouseButton);
-            await Task.Delay(50);
-            BO.browser.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.LeftMouseButton);
-            await Task.Delay(50);
         }
     }
 }

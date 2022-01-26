@@ -23,11 +23,44 @@ namespace AutoTradeOriginal
             return browser.CanExecuteJavascriptInMainFrame;
         }
 
-        protected async Task<(bool result, string text)> getResultFromScript(string script)
+        protected async Task<string> getResultFromScript(string script, bool trace = false)
         {
             JavascriptResponse res = await browser.EvaluateScriptAsync(script);
-            if (res.Success && res.Result != null) return (true, res.Result.ToString());
-            else return (false, null);
+            
+            if (res.Success)
+            {
+                if(res.Result != null)
+                {
+                    if(res.Result.ToString() != "")
+                    {
+                        return res.Result.ToString();
+                    } 
+                    else
+                    {
+                        if (trace)
+                        {
+                            Console.WriteLine("Success = true, Result != null, Result.ToString() = \"\"");
+                        }
+                        return null;
+                    }
+                } 
+                else
+                {
+                    if (trace)
+                    {
+                        Console.WriteLine("Success = true, Result = null");
+                    }
+                    return null;
+                }
+            } 
+            else
+            {
+                if (trace)
+                {
+                    Console.WriteLine("Success = true");
+                }
+                return null;
+            }
         }
 
         protected async Task<bool> LoadPage(string url)
@@ -71,8 +104,8 @@ namespace AutoTradeOriginal
             bool result = false;
             for (int i = 0; i < num; i++)
             {
-                (bool res, string text) = await getResultFromScript(script);
-                if (res && text == "True")
+                string text = await getResultFromScript(script);
+                if (text == "True")
                 {
                     result = true;
                     break;
@@ -106,6 +139,16 @@ namespace AutoTradeOriginal
             k.IsSystemKey = false;
             k.Type = KeyEventType.Char;
             browser.GetBrowser().GetHost().SendKeyEvent(k);
+        }
+
+        protected void inputNumber(int num)
+        {
+            string numStr = num.ToString();
+            foreach(char c in numStr)
+            {
+                int cnum = int.Parse(c.ToString());
+                sendKeyEventChar(cnum + 48);
+            }
         }
     }
 }
