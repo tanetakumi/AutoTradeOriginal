@@ -12,15 +12,31 @@ namespace AutoTradeOriginal
     {
         protected ChromiumWebBrowser browser;
 
-        protected OperateBrowser(ChromiumWebBrowser _browser)
+        protected OperateBrowser()
         {
-            browser = _browser;
+            if (Cef.IsInitialized == false)
+            {
+                CefSettings settings = new CefSettings();
+                settings.Locale = "ja";
+                settings.AcceptLanguageList = "ja-JP";
+                settings.LogSeverity = LogSeverity.Disable;
+                settings.CefCommandLineArgs.Add("disable-gpu", "1");
+                Cef.Initialize(settings);
+            }
+            browser = new ChromiumWebBrowser("https://www.google.com/");
         }
 
-        //Javascript が実行できるかどうかの確認
-        public bool CheckExcuteJavascript()
+        public ChromiumWebBrowser getBrowser()
         {
-            return browser.CanExecuteJavascriptInMainFrame;
+            return browser;
+        }
+
+        public void Dispose()
+        {
+            if (browser != null)
+            {
+                browser.Dispose();
+            }
         }
 
         protected async Task<string> getResultFromScript(string script, bool trace = false)
@@ -68,10 +84,11 @@ namespace AutoTradeOriginal
             browser.Load(url);
             for (int i = 0; i < 5; i++)
             {
+                Console.WriteLine(i.ToString() + " 回目のサイト読み込み");
                 do
                 {
                     await Task.Delay(1000);
-                    Console.WriteLine(i.ToString() + " : Browser Loading");
+                    
                 }
                 while (browser.IsLoading);
 

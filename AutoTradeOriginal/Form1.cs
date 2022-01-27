@@ -21,9 +21,9 @@ namespace AutoTradeOriginal
         private CancellationTokenSource cts_loop = null;
         private string DemoReal = "デモ口座";
         private HighLow BO;
-        private ChromiumWebBrowser browser = null;
+        //private ChromiumWebBrowser browser = null;
 
-        //-----------------------------------------------------------
+        
         public Form1()
         {
             InitializeComponent();
@@ -35,26 +35,8 @@ namespace AutoTradeOriginal
         //Chromiumの初期化
         private void InitializeChromium()
         {
-            if (Cef.IsInitialized == false)
-            {
-                CefSettings settings = new CefSettings();
-                settings.Locale = "ja";
-                settings.AcceptLanguageList = "ja-JP";
-                settings.LogSeverity = LogSeverity.Disable;
-                settings.CefCommandLineArgs.Add("disable-gpu", "1");
-                Cef.Initialize(settings);
-            }
-            if(browser != null)
-            {
-                browser.Dispose();
-                browser = null;
-            }
-            browser = new ChromiumWebBrowser("https://www.google.com/");
-            splitContainer2.Panel2.Controls.Add(browser);
-            browser.Dock = DockStyle.Fill;
-            browser.Enabled = true;
-
-            BO = new HighLow(browser);
+            BO = new HighLow();
+            splitContainer2.Panel2.Controls.Add(BO.getBrowser());
         }
 
         //電源周りの設定
@@ -100,12 +82,8 @@ namespace AutoTradeOriginal
             Settings.Default.username = textBox_username.Text;
             Settings.Default.password = textBox_password.Text;
             Settings.Default.Save();
-            if(browser != null)
-            {
-                browser.Dispose();
-                browser = null;
-            }
-            
+            BO.Dispose();
+
             Cef.Shutdown();
         }
 
@@ -126,9 +104,10 @@ namespace AutoTradeOriginal
         {
             await BO.Initialize();
             await Task.Delay(10000);
-            await BO.inputPrice(42213);
-
-
+            await BO.Oneclick();
+            await Task.Delay(7000);
+            await BO.Invest("USD/JPY#high#1203#5");
+            
         }
 
         private async Task<string> WaitForNamedpipe(string pipename, CancellationToken ct)
@@ -246,10 +225,7 @@ namespace AutoTradeOriginal
                     logbox("待機します");
                     string mes = await WaitForNamedpipe("highlowpipe", ct);
                     logbox("シグナルを受け取りました");
-                    (string currency, string high_low, int price, int gametab, int period, int rank) = MessageToTuple(mes);
                     int repeat = Decimal.ToInt32(numericUpDown_retry.Value);
-                    int retry_milsec = 500;
-                    //string result = await BO.InvestHighLow(currency, high_low, price, repeat, retry_milsec, gametab, period, rank);
                     await Task.Delay(1000, ct);
                 }
                 catch (TaskCanceledException)
@@ -286,8 +262,6 @@ namespace AutoTradeOriginal
             }
         }
 
-        
-
         private async void button_pagedown_Click(object sender, EventArgs e)
         {
             await BO.Scroll(0);
@@ -296,116 +270,6 @@ namespace AutoTradeOriginal
         private async void button_pageup_Click(object sender, EventArgs e)
         {
             await BO.Scroll(1);
-        }
-
-
-
-        //受け取ったメッセージからtupleを作成
-        private (string currency, string high_low, int price, int gametab, int period, int rank) MessageToTuple(string message)
-        {
-            //メッセージ　<通貨>#<HighLow>#<価格>#<時間軸ナンバー>
-            string[] mes = message.Split('#');
-            if (mes.Length == 4)
-            {
-                //HighかLowの選択
-                string high_low = "";
-                if (mes[1].ToLower() == "high" || mes[1].ToLower() == "up")
-                {
-                    high_low = "up";
-                }
-                else if (mes[1].ToLower() == "low" || mes[1].ToLower() == "down")
-                {
-                    high_low = "down";
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException("Namedpipeのメッセージが範囲外のものです。");
-                }
-
-                //取引価格の選択
-                int price = int.Parse(mes[2]);
-
-                //取引時間軸の選択
-                int pnum = int.Parse(mes[3]);
-                (int gametab, int period, int rank) tup = selectPeriod(pnum);
-
-                return (mes[0], high_low, price, tup.gametab, tup.period, tup.rank);
-            }
-            else
-            {
-                throw new IndexOutOfRangeException();
-            }
-        }
-
-        //取引時間軸の選択
-        private (int gametab, int period, int rank) selectPeriod(int num)
-        {
-            (int, int, int) tuple;
-            switch (num)
-            {
-                //HighLow 15分
-                case 1://15分短期
-                    tuple = (1, 2, 1);
-                    break;
-                case 2://15分中期
-                    tuple = (1, 2, 2);
-                    break;
-                case 3://15分長期
-                    tuple = (1, 2, 3);
-                    break;
-                case 4://1時間
-                    tuple = (1, 3, 0);
-                    break;
-                case 5://1日
-                    tuple = (1, 4, 0);
-                    break;
-                //HighLowスプ
-                case 6://15分短期
-                    tuple = (2, 2, 1);
-                    break;
-                case 7://15分中期
-                    tuple = (2, 2, 2);
-                    break;
-                case 8://15分長期
-                    tuple = (2, 2, 3);
-                    break;
-                case 9://1時間
-                    tuple = (2, 3, 0);
-                    break;
-                case 10://1日
-                    tuple = (2, 4, 0);
-                    break;
-                //Turbo
-                case 11://30秒
-                    tuple = (3, 2, 0);
-                    break;
-                case 12://1分
-                    tuple = (3, 3, 0);
-                    break;
-                case 13://3分
-                    tuple = (3, 4, 0);
-                    break;
-                case 14://5分
-                    tuple = (3, 5, 0);
-                    break;
-                //Turboスプ
-                case 15://30秒
-                    tuple = (4, 2, 0);
-                    break;
-                case 16://1分
-                    tuple = (4, 3, 0);
-                    break;
-                case 17://3分
-                    tuple = (4, 4, 0);
-                    break;
-                case 18://5分
-                    tuple = (4, 5, 0);
-                    break;
-                default:
-                    tuple = (0, 0, 0);
-                    break;
-            }
-            return tuple;
         }
     }
 }

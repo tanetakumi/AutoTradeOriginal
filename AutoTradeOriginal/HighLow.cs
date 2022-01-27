@@ -10,15 +10,15 @@ namespace AutoTradeOriginal
 {
     class HighLow : OperateBrowser
     {
-        public HighLow(ChromiumWebBrowser _browser) : base(_browser)
+        public HighLow() : base()
         {
         }
+
+        
 
         //初期化
         public async Task<bool> Initialize(bool real = false, string username = "", string password = "")
         {
-            //HighLowが開かれるまで待機
-            //await LoadPage("https://app.highlow.com/quick-demo");
 
             //リアル口座
             if (real)
@@ -63,7 +63,7 @@ namespace AutoTradeOriginal
             return true;
         }
 
-        public async Task resetTab()
+        public async Task ResetTab()
         {
             await browser.EvaluateScriptAsync(
                 "var num = document.getElementById('content_1').children.length;" + 
@@ -72,7 +72,7 @@ namespace AutoTradeOriginal
                 "}");
         }
         
-        public async Task<(int, string)> investmentReturn()
+        public async Task<(int, string)> InvestmentReturn()
         {
             string text = await getResultFromScript(
                 "function con(){var tabs = document.getElementById('content_1').children;" +
@@ -81,6 +81,7 @@ namespace AutoTradeOriginal
                 " document, null, 6, null).snapshotItem(0).innerText;}}" +
                 "}con();"
             );
+            Console.WriteLine("text: "+text);
             if (text != null)
             {
                 string[] words = text.Split('#');
@@ -92,23 +93,24 @@ namespace AutoTradeOriginal
             return (-1, null);
         }
 
-        private async Task<bool> checkInvestment()
+        private async Task<bool> CheckInvestment()
         {
-            var first = await investmentReturn();
-            if(first.Item1 == -1)
+            (int first_i, string first_s) = await InvestmentReturn();
+            if(first_i == -1)
             {
                 throw new Exception("投資エラー");
             }
 
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 15; i++)
             {
-                await Task.Delay(300);
-                var tmp = await investmentReturn();
-                if(tmp.Item1 == first.Item1 + 1)
+                await Task.Delay(500);
+                (int tmp_i, string tmp_s) = await InvestmentReturn();
+                //Console.WriteLine("first:", first_i.ToString(), "  second:", tmp_i.ToString());
+                if (tmp_i == first_i + 1)
                 {
                     return true;
                 }
-                else if(tmp.Item2!="")
+                if(tmp_s != "")
                 {
                     return false;
                 }
@@ -116,7 +118,37 @@ namespace AutoTradeOriginal
             return false;
         }
 
-        public async Task inputPrice(int price)
+        public async Task Invest(string message, int retry = 3)
+        {
+            (string cur, string high_low, int price, int pnum) = MessageToTuple(message);
+            await SelectPeriod(pnum, cur);
+            await InputPrice(price);
+            for (int i = 0; i<retry ; i++)
+            {
+                if(high_low == "up")
+                {
+                    await browser.EvaluateScriptAsync("document.getElementById('HIGH_TRADE_BUTTON').click();");
+                }
+                else
+                {
+                    await browser.EvaluateScriptAsync("document.getElementById('LOW_TRADE_BUTTON').click();");
+                }
+                if(await CheckInvestment())
+                {
+                    break;
+                }
+            }
+        }
+        public async Task Oneclick()
+        {
+            await browser.EvaluateScriptAsync(
+                "var data = document.evaluate('//*[@id=\"scroll_panel_1_content\"]/div[2]/div/div[2]/div/div[2]/div[1]/div'," +
+                " document, null, 6, null).snapshotItem(0).getAttribute('data-test');if(!data.match('Enable')){document.evaluate(" +
+                "'//*[@id=\"scroll_panel_1_content\"]/div[2]/div/div[2]/div/div[2]/div[2]/div[1]', document, null, 6, null).snapshotItem(0).click();}"
+                );
+        }
+
+        public async Task InputPrice(int price)
         {   
             
             await browser.EvaluateScriptAsync(
@@ -126,7 +158,7 @@ namespace AutoTradeOriginal
             );
             inputNumber(price);
         }
-        public async Task selectPeriod(int num, string currency)
+        public async Task SelectPeriod(int num, string currency)
         {
             //<non sp>  0 Turbo30s  1  Turbo60s  2  Turbo3m  3  Turbo5m  HighLow15m( 4  sho  5  mid  6  lon )  7  HighLow1h  8  HighLow1d 
             //<sp>      9 Turbo30s  10 Turbo60s  11 Turbo3m  12 Turbo5m  HighLow15m( 14 sho  15 mid  16 lon )  17 HighLow1h  18 HighLow1d
@@ -213,6 +245,8 @@ namespace AutoTradeOriginal
                     category = "FixedPayoutHL0";
                     period = "86400000";
                     break;
+                default:
+                    throw new Exception("選択できる期間ではありません。");
             }
 
 
@@ -243,7 +277,7 @@ namespace AutoTradeOriginal
         }
 
         //受け取ったメッセージからtupleを作成
-        private (string currency, string high_low, int price, int pnum) MessageToTuple(string message)
+        private (string, string, int, int) MessageToTuple(string message)
         {
             //メッセージ　<通貨>#<HighLow>#<価格>#<時間軸ナンバー>
 
