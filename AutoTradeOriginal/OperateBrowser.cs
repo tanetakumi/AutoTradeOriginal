@@ -20,7 +20,12 @@ namespace AutoTradeOriginal
                 settings.Locale = "ja";
                 settings.AcceptLanguageList = "ja-JP";
                 settings.LogSeverity = LogSeverity.Disable;
-                settings.CefCommandLineArgs.Add("disable-gpu", "1");
+                settings.SetOffScreenRenderingBestPerformanceArgs();
+                settings.CefCommandLineArgs.Add("no-proxy-server", "1");
+                //settings.EnableInternalPdfViewerOffScreen();
+                //settings.CefCommandLineArgs.Add("enable-begin-frame-scheduling", "1");
+
+
                 Cef.Initialize(settings);
             }
             browser = new ChromiumWebBrowser("https://www.google.com/");
@@ -37,6 +42,7 @@ namespace AutoTradeOriginal
             {
                 browser.Dispose();
             }
+            Cef.Shutdown();
         }
 
         protected async Task<string> getResultFromScript(string script, bool trace = false)

@@ -19,6 +19,8 @@ using System.Text.Json;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using System.Net.Http.Headers;
+using System.Diagnostics;
+using System.Dynamic;
 
 namespace AutoTradeOriginal
 {
@@ -27,11 +29,8 @@ namespace AutoTradeOriginal
     {
         
         private CancellationTokenSource cts_loop = null;
-        private string DemoReal = "デモ口座";
         private HighLow BO;
-        //private ChromiumWebBrowser browser = null;
-
-        
+  
         public Form1()
         {
             InitializeComponent();
@@ -44,7 +43,7 @@ namespace AutoTradeOriginal
         private void InitializeChromium()
         {
             BO = new HighLow();
-            splitContainer2.Panel2.Controls.Add(BO.getBrowser());
+            splitContainer1.Panel1.Controls.Add(BO.getBrowser());
         }
 
         //電源周りの設定
@@ -71,7 +70,7 @@ namespace AutoTradeOriginal
         {
             textBox_username.Text = Settings.Default.username;
             textBox_password.Text = Settings.Default.password;
-            label15.Text = "バージョン:" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            //label15.Text = "バージョン:" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         }
 
@@ -91,8 +90,6 @@ namespace AutoTradeOriginal
             Settings.Default.password = textBox_password.Text;
             Settings.Default.Save();
             BO.Dispose();
-
-            Cef.Shutdown();
         }
 
         //閉じ切った後
@@ -110,23 +107,15 @@ namespace AutoTradeOriginal
         }
         private async void button_start_Click(object sender, EventArgs e)
         {
-            await BO.Initialize(true);
-            await BO.test();
             
-        }
+            await BO.Initialize();
+            await Task.Delay(10000);
+            await BO.Oneclick();
+            cts_loop = new CancellationTokenSource();
+            history(cts_loop.Token);
+            await InfiniteLoopAsync(cts_loop.Token);
 
-        private async Task<string> WaitForNamedpipe(string pipename, CancellationToken ct)
-        {
-            string message = "";
-            using (NamedPipeServerStream npss = new NamedPipeServerStream(pipename, PipeDirection.InOut, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
-            {
-                await npss.WaitForConnectionAsync(ct);
-                using (StreamReader reader = new StreamReader(npss))
-                {
-                    message = reader.ReadLine();
-                }
-            }
-            return message;
+            
         }
 
         private void restart(CancellationToken ct)
@@ -162,7 +151,6 @@ namespace AutoTradeOriginal
                 }
             },ct).ContinueWith((o) =>
             {
-                
                 if(o.Result == 0)
                 {
                     Console.WriteLine("再起動タスク実行");
@@ -181,34 +169,6 @@ namespace AutoTradeOriginal
             });
         }
 
-        private async void history(CancellationToken ct)
-        {
-            await Task.Delay(60000);
-
-            var _ = Task.Run(async () =>
-            {
-                while (true)
-                {
-                    try
-                    {
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        Console.WriteLine("task delayのキャンセル");
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
-                    if (ct.IsCancellationRequested)
-                    {
-                        Console.WriteLine("履歴取得スレッドの削除");
-                        return;
-                    }
-                }
-            },ct);
-        }
-
         private void button_stop_Click(object sender, EventArgs e)
         {
             if (cts_loop != null)
@@ -225,12 +185,18 @@ namespace AutoTradeOriginal
                 //②投資
                 try
                 {
-                    //Message:  0-通貨# 1-HighLow# 2-金額倍率
-                    //①メッセージの受け取り
                     logbox("待機します");
-                    string mes = await WaitForNamedpipe("highlowpipe", ct);
+
+                    string mes = await NamedPipe.WaitForNamedpipe("highlowpipe", ct);
+
                     logbox("シグナルを受け取りました");
-                    await Task.Delay(1000, ct);
+
+                    //投資
+                    await BO.Invest(mes);
+
+                    await Task.Delay(10000, ct);
+
+                    await BO.ResetTab();
                 }
                 catch (TaskCanceledException)
                 {
@@ -242,7 +208,7 @@ namespace AutoTradeOriginal
                 }
                 catch (Exception e)
                 {
-                    logbox("その他の例外\n"+e.ToString());
+                    logbox(e.ToString());
                 }
                 if (ct.IsCancellationRequested)
                 {
@@ -266,51 +232,60 @@ namespace AutoTradeOriginal
             }
         }
 
-        private async void button_pagedown_Click(object sender, EventArgs e)
+        private async void history(CancellationToken ct)
         {
-            await BO.Scroll(0);
-        }
+            await Task.Delay(60000);
 
-        private async void button_pageup_Click(object sender, EventArgs e)
-        {
-            await BO.Scroll(1);
-        }
-
-        private async void button1_Click(object sender, EventArgs e)
-        {
-            //FirebaseWapper fw = new FirebaseWapper();
-            //var res = await fw.Send("zjcioj", "test", "https://autotradeauth-default-rtdb.firebaseio.com/Users/.json");
-            //Console.WriteLine(DiskNumber.GetDiskNumber());
-            //await fw.UserCheck("https://autotradeauth-default-rtdb.firebaseio.com/Users/data.json");
-            Console.WriteLine(await Auth.Authentication());
-        }
-
-
-
-        private JsonSerializerOptions GetJsonOption()
-        {
-            // ユニコードのレンジ指定で日本語も正しく表示、インデントされるように指定
-            var options = new JsonSerializerOptions
+            var _ = Task.Run(async () =>
             {
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-                WriteIndented = true,
-            };
-            return options;
+                while (true)
+                {
+                    try
+                    {
+                        await Task.Delay(10000);
+                        GetUsage();
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        Console.WriteLine("task delayのキャンセル");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                    if (ct.IsCancellationRequested)
+                    {
+                        Console.WriteLine("履歴取得スレッドの削除");
+                        return;
+                    }
+                }
+            }, ct);
         }
 
-        private HttpRequestMessage CreateRequest(HttpMethod httpMethod, string requestEndPoint)
+        public void GetUsage()
         {
-            var request = new HttpRequestMessage(httpMethod, requestEndPoint);
-            return this.AddHeaders(request);
-        }
+            PerformanceCounter cpuCounter = new PerformanceCounter();
+            cpuCounter.CategoryName = "Processor";
+            cpuCounter.CounterName = "% Processor Time";
+            cpuCounter.InstanceName = "_Total";
 
-        private HttpRequestMessage AddHeaders(HttpRequestMessage request)
-        {
-            request.Headers.Add("Accept", "application/json");
-            request.Headers.Add("Accept-Charset", "utf-8");
-            // 同じようにして、例えば認証通過後のトークンが "Authorization: Bearer {トークンの文字列}"
-            // のように必要なら適宜追加していきます。
-            return request;
+            // will always start at 0
+            float firstValue = cpuCounter.NextValue();
+            System.Threading.Thread.Sleep(1000);
+            // now matches task manager reading
+            int secondValue = (int)cpuCounter.NextValue();
         }
     }
 }
+
+//https://autotradeauth-default-rtdb.firebaseio.com/Users/data.json
+/*
+private async void button_pagedown_Click(object sender, EventArgs e)
+{
+    await BO.Scroll(0);
+}
+
+private async void button_pageup_Click(object sender, EventArgs e)
+{
+    await BO.Scroll(1);
+}*/

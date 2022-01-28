@@ -47,6 +47,7 @@ namespace AutoTradeOriginal
                 await Task.Delay(10000);
                 //広告の削除
                 await browser.EvaluateScriptAsync("document.evaluate('//*[@id=\"root\"]/div/div[16]/div/div[1]', document, null, 6, null).snapshotItem(0).click();");
+                await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
             }
             return true;
         }
@@ -58,6 +59,7 @@ namespace AutoTradeOriginal
                 "for (let i = num - 1; i > 0; i--){" +
                     "document.getElementsByClassName('RecentlyOpenOptions_tabClose__2EbqE')[i].click();" + 
                 "}");
+            await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
         }
         
         public async Task<(int, string)> InvestmentReturn()
@@ -89,11 +91,10 @@ namespace AutoTradeOriginal
                 throw new Exception("投資エラー");
             }
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 10; i++)
             {
                 await Task.Delay(500);
                 (int tmp_i, string tmp_s) = await InvestmentReturn();
-                //Console.WriteLine("first:", first_i.ToString(), "  second:", tmp_i.ToString());
                 if (tmp_i == first_i + 1)
                 {
                     return true;
@@ -111,6 +112,8 @@ namespace AutoTradeOriginal
             (string cur, string high_low, int price, int pnum) = MessageToTuple(message);
             await SelectPeriod(pnum, cur);
             await InputPrice(price);
+            await Task.Delay(500);
+            await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
             for (int i = 0; i<retry ; i++)
             {
                 if(high_low == "up")

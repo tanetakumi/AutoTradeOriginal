@@ -117,33 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="textBox_read.Text" xml:space="preserve">
-    <value>■二次配布した場合は、本自動売買ソフトおよびインジケータともに凍結します。
-どちらもサーバー上で管理しております。
-
-■使用するインジケーターはMQL-&gt;indicatorフォルダーの直下に置いてください。
-
-■モデ口座で稼働確認後、リアル口座にて取引を開始してください。
-
-■リアル口座で取引開始後、デモ口座に戻す場合、リアル口座のログイン情報が残ってしまうため再起動が必要となります。
-
-■ネットの速度の関係で取引履歴の読み取りに不備が生じる可能性がございます(「取引中」という文言が常時表示される)
-お手数ですが、項目を選択して削除をお願いします。
-
-■インポートはTradingHistoryという名称のシートしか読み込むことができません。
-また、200行以上の読み込めは不可となります。
-
-■自動売買中はインポート、エクスポートボタンの使用は不可となります。
-
-■High,Lowのエントリー方向の制限はインジケーターから設定可能です。
-
-■複数の通貨の同時エントリーはインジケーターのタイムアウトで設定可能です。
-一つずつ順番にエントリーが行われ、設定したタイムアウトを超過すると、その通貨はエントリ―されません。
-
-■投資に関しましての最終判断は御自身でなさるよう、お願い致します。
-  自動売買システム・インジケータ自体の不具合の保証は致しますが、被った「いかなる損害」につきましても当方は一切の責任を負いかねます（自己責任）
-</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
