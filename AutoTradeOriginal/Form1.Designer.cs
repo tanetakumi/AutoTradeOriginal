@@ -42,9 +42,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.numericUpDown_retry = new System.Windows.Forms.NumericUpDown();
             this.button_pagedown = new System.Windows.Forms.Button();
             this.button_pageup = new System.Windows.Forms.Button();
             this.listBox_log = new System.Windows.Forms.ListBox();
@@ -63,6 +60,7 @@
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox_read = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tab_setting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -74,8 +72,6 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_retry)).BeginInit();
             this.tab_history.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
@@ -159,9 +155,9 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.button1);
             this.splitContainer2.Panel1.Controls.Add(this.groupBox5);
             this.splitContainer2.Panel1.Controls.Add(this.label15);
-            this.splitContainer2.Panel1.Controls.Add(this.groupBox4);
             // 
             // splitContainer2.Panel2
             // 
@@ -237,53 +233,11 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(574, 81);
+            this.label15.Location = new System.Drawing.Point(773, 81);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(50, 12);
             this.label15.TabIndex = 18;
             this.label15.Text = "バージョン";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Controls.Add(this.numericUpDown_retry);
-            this.groupBox4.Location = new System.Drawing.Point(341, 3);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(227, 90);
-            this.groupBox4.TabIndex = 16;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "取引基本設定";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(23, 36);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(61, 12);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "購入リトライ";
-            // 
-            // numericUpDown_retry
-            // 
-            this.numericUpDown_retry.Location = new System.Drawing.Point(90, 34);
-            this.numericUpDown_retry.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDown_retry.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown_retry.Name = "numericUpDown_retry";
-            this.numericUpDown_retry.Size = new System.Drawing.Size(61, 19);
-            this.numericUpDown_retry.TabIndex = 13;
-            this.numericUpDown_retry.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
             // 
             // button_pagedown
             // 
@@ -435,6 +389,16 @@
             this.textBox_read.TabIndex = 0;
             this.textBox_read.Text = resources.GetString("textBox_read.Text");
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(793, 22);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -461,9 +425,6 @@
             this.splitContainer2.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_retry)).EndInit();
             this.tab_history.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
@@ -477,9 +438,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tab_setting;
         private System.Windows.Forms.ListBox listBox_log;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown numericUpDown_retry;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.CheckBox checkBox_real;
         private System.Windows.Forms.TextBox textBox_username;
@@ -506,6 +464,7 @@
         private System.Windows.Forms.Button button_pageup;
         private System.Windows.Forms.Button button_pagedown;
         private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.Button button1;
     }
 }
 

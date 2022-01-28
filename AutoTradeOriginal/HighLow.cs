@@ -19,29 +19,17 @@ namespace AutoTradeOriginal
         //初期化
         public async Task<bool> Initialize(bool real = false, string username = "", string password = "")
         {
-
             //リアル口座
             if (real)
             {
-                //ログインクリック
-                await browser.EvaluateScriptAsync("document.querySelector('#header > div > div > div > div > div > span > span > a:nth-child(5) > i').click()");
+                //デモ口座URL
+                await LoadPage("https://app.highlow.com/login");
+                await Task.Delay(10000);
 
-                //ログイン画面になるまで10秒待つ
-                if (!await waitUntilTrue(10, 1000, "document.getElementById('login-password').getAttribute('placeholder')=='パスワード'"))
-                {
-                    Console.WriteLine("リアル口座のログインできませんでした");
-                    return false;
-                }
-
-                //username passwordを入力する
-                await browser.EvaluateScriptAsync(
-                    $"document.getElementById('login-username').value = '{username}';" +
-                    $"document.getElementById('login-password').value = '{password}';");
-
-                await Task.Delay(3000);
+                //await Task.Delay(3000);
 
                 //ログインボタンのクリック
-                await browser.EvaluateScriptAsync("document.getElementsByClassName('btn btn-highlight btn-extruded btn-fluid form-loading-indicator')[0].click();");
+                //await browser.EvaluateScriptAsync("document.getElementsByClassName('btn btn-highlight btn-extruded btn-fluid form-loading-indicator')[0].click();");
 
                 //トレードゾーンが表示されるまで待つ
                 if (!await waitUntilTrue(15, 1000, "document.getElementById('tradingZoneRegion').getAttribute('style')=='display: block;'"))
@@ -87,7 +75,7 @@ namespace AutoTradeOriginal
                 string[] words = text.Split('#');
                 if(words.Length == 2)
                 {
-                    return (Int32.Parse(words[0]), words[1]); 
+                    return (int.Parse(words[0]), words[1]); 
                 }
             }
             return (-1, null);
@@ -324,6 +312,13 @@ namespace AutoTradeOriginal
             }
         }
 
+        public async Task test()
+        {
+            await browser.EvaluateScriptAsync("document.getElementById('login-username').focus();");
+            await Task.Delay(1000);
+            sendKeyEventChar(74);
+
+        }
         
 
     }

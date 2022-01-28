@@ -11,6 +11,14 @@ using CefSharp;
 using System.IO.Pipes;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Text;
+using System.Net;
+using System.Text.Json;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using System.Net.Http.Headers;
 
 namespace AutoTradeOriginal
 {
@@ -102,11 +110,8 @@ namespace AutoTradeOriginal
         }
         private async void button_start_Click(object sender, EventArgs e)
         {
-            await BO.Initialize();
-            await Task.Delay(10000);
-            await BO.Oneclick();
-            await Task.Delay(7000);
-            await BO.Invest("USD/JPY#high#1203#5");
+            await BO.Initialize(true);
+            await BO.test();
             
         }
 
@@ -225,7 +230,6 @@ namespace AutoTradeOriginal
                     logbox("待機します");
                     string mes = await WaitForNamedpipe("highlowpipe", ct);
                     logbox("シグナルを受け取りました");
-                    int repeat = Decimal.ToInt32(numericUpDown_retry.Value);
                     await Task.Delay(1000, ct);
                 }
                 catch (TaskCanceledException)
@@ -270,6 +274,43 @@ namespace AutoTradeOriginal
         private async void button_pageup_Click(object sender, EventArgs e)
         {
             await BO.Scroll(1);
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            //FirebaseWapper fw = new FirebaseWapper();
+            //var res = await fw.Send("zjcioj", "test", "https://autotradeauth-default-rtdb.firebaseio.com/Users/.json");
+            //Console.WriteLine(DiskNumber.GetDiskNumber());
+            //await fw.UserCheck("https://autotradeauth-default-rtdb.firebaseio.com/Users/data.json");
+            Console.WriteLine(await Auth.Authentication());
+        }
+
+
+
+        private JsonSerializerOptions GetJsonOption()
+        {
+            // ユニコードのレンジ指定で日本語も正しく表示、インデントされるように指定
+            var options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+                WriteIndented = true,
+            };
+            return options;
+        }
+
+        private HttpRequestMessage CreateRequest(HttpMethod httpMethod, string requestEndPoint)
+        {
+            var request = new HttpRequestMessage(httpMethod, requestEndPoint);
+            return this.AddHeaders(request);
+        }
+
+        private HttpRequestMessage AddHeaders(HttpRequestMessage request)
+        {
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Accept-Charset", "utf-8");
+            // 同じようにして、例えば認証通過後のトークンが "Authorization: Bearer {トークンの文字列}"
+            // のように必要なら適宜追加していきます。
+            return request;
         }
     }
 }
