@@ -52,14 +52,14 @@ namespace AutoTradeOriginal
             switch (e.Mode)
             {
                 case Microsoft.Win32.PowerModes.Suspend:
-                    logbox("PCの休止・スリープを検知しました");
+                    Logbox("PCの休止・スリープを検知しました");
                     break;
                 case Microsoft.Win32.PowerModes.Resume:
                     if (button_stop.Enabled)
                     {
                         button_stop.PerformClick();
                     }
-                    logbox("PCが休止・スリープされました。取引が中断されました。");
+                    Logbox("PCが休止・スリープされました。取引が中断されました。");
                     MessageBox.Show("PCが休止・スリープされました。システムを再起動してください。");
                     break;
             }
@@ -112,7 +112,6 @@ namespace AutoTradeOriginal
             await Task.Delay(10000);
             await BO.Oneclick();
             cts_loop = new CancellationTokenSource();
-            history(cts_loop.Token);
             await InfiniteLoopAsync(cts_loop.Token);
 
             
@@ -185,14 +184,16 @@ namespace AutoTradeOriginal
                 //②投資
                 try
                 {
-                    logbox("待機します");
+                    Logbox("待機します");
 
                     string mes = await NamedPipe.WaitForNamedpipe("highlowpipe", ct);
 
-                    logbox("シグナルを受け取りました");
+                    Logbox("シグナルを受け取りました");
 
                     //投資
-                    await BO.Invest(mes);
+                    string result = await BO.Invest(mes);
+
+                    Logbox(result);
 
                     await Task.Delay(10000, ct);
 
@@ -208,7 +209,7 @@ namespace AutoTradeOriginal
                 }
                 catch (Exception e)
                 {
-                    logbox(e.ToString());
+                    Logbox(e.ToString());
                 }
                 if (ct.IsCancellationRequested)
                 {
@@ -219,7 +220,7 @@ namespace AutoTradeOriginal
         }
 
 
-        private void logbox(string text)
+        private void Logbox(string text)
         {
             DateTime dt = DateTime.Now;
             listBox_log.Items.Add(dt.ToString("yyyy/MM/dd HH:mm:ss") + "   " + text);
@@ -243,7 +244,6 @@ namespace AutoTradeOriginal
                     try
                     {
                         await Task.Delay(10000);
-                        GetUsage();
                     }
                     catch (TaskCanceledException)
                     {
@@ -260,20 +260,6 @@ namespace AutoTradeOriginal
                     }
                 }
             }, ct);
-        }
-
-        public void GetUsage()
-        {
-            PerformanceCounter cpuCounter = new PerformanceCounter();
-            cpuCounter.CategoryName = "Processor";
-            cpuCounter.CounterName = "% Processor Time";
-            cpuCounter.InstanceName = "_Total";
-
-            // will always start at 0
-            float firstValue = cpuCounter.NextValue();
-            System.Threading.Thread.Sleep(1000);
-            // now matches task manager reading
-            int secondValue = (int)cpuCounter.NextValue();
         }
     }
 }

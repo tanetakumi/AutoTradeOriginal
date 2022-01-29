@@ -107,13 +107,12 @@ namespace AutoTradeOriginal
             return false;
         }
 
-        public async Task Invest(string message, int retry = 3)
+        public async Task<string> Invest(string message, int retry = 3)
         {
             (string cur, string high_low, int price, int pnum) = MessageToTuple(message);
             await SelectPeriod(pnum, cur);
             await InputPrice(price);
             await Task.Delay(500);
-            await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
             for (int i = 0; i<retry ; i++)
             {
                 if(high_low == "up")
@@ -126,9 +125,10 @@ namespace AutoTradeOriginal
                 }
                 if(await CheckInvestment())
                 {
-                    break;
+                    return (i+1).ToString()+"回目の投資にて成功";
                 }
             }
+            return "失敗しました。";
         }
         public async Task Oneclick()
         {
@@ -265,6 +265,8 @@ namespace AutoTradeOriginal
                     "{if(periods[i].children[2].children[0].getElementsByTagName('svg')[0].getAttribute('class')!=null){periods[i].click();break;} }}"
                 );
             }
+            //DisplayOFF
+            await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
         }
 
         //受け取ったメッセージからtupleを作成
