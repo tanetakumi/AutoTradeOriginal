@@ -1,26 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using AutoTradeOriginal.Properties;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Threading;
-using AutoTradeOriginal.Properties;
-using System.Reflection;
-using CefSharp.WinForms;
-using CefSharp;
-using System.IO.Pipes;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Text;
-using System.Net;
-using System.Text.Json;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
-using System.Net.Http.Headers;
-using System.Diagnostics;
-using System.Dynamic;
 
 namespace AutoTradeOriginal
 {
@@ -29,7 +11,7 @@ namespace AutoTradeOriginal
     {
         
         private CancellationTokenSource cts_loop = null;
-        private HighLow BO;
+        private HighLow BO;                                                                                                                                                                                                                     
   
         public Form1()
         {
@@ -71,7 +53,6 @@ namespace AutoTradeOriginal
             textBox_username.Text = Settings.Default.username;
             textBox_password.Text = Settings.Default.password;
             //label15.Text = "バージョン:" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
         }
 
         //閉じるとき
@@ -105,16 +86,25 @@ namespace AutoTradeOriginal
             button_start.Enabled = true;
             splitContainer1.Panel1.Enabled = true;
         }
+        void Disable_interface()
+        {
+            button_stop.Enabled = true;
+            button_start.Enabled = false;
+            splitContainer1.Panel1.Enabled = false;
+        }
         private async void button_start_Click(object sender, EventArgs e)
         {
-            
+            if (DateTime.Now > DateTime.Parse("2022/02/09 12:34:56"))
+            {
+                MessageBox.Show("Error");
+                return;
+            }
+            Disable_interface();
             await BO.Initialize();
             await Task.Delay(10000);
             await BO.Oneclick();
             cts_loop = new CancellationTokenSource();
             await InfiniteLoopAsync(cts_loop.Token);
-
-            
         }
 
         private void restart(CancellationToken ct)

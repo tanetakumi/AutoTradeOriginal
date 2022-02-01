@@ -14,7 +14,6 @@ namespace AutoTradeOriginal
         {
         }
 
-        
 
         //初期化
         public async Task<bool> Initialize(bool real = false, string username = "", string password = "")
