@@ -16,26 +16,17 @@ namespace AutoTradeOriginal
 
 
         //初期化
-        public async Task<bool> Initialize(bool real = false, string username = "", string password = "")
+        public async Task Initialize(bool real = false)
         {
             //リアル口座
             if (real)
             {
-                //デモ口座URL
-                await LoadPage("https://app.highlow.com/login");
+                //Reload
+                browser.Reload();
                 await Task.Delay(10000);
-
-                //await Task.Delay(3000);
-
-                //ログインボタンのクリック
-                //await browser.EvaluateScriptAsync("document.getElementsByClassName('btn btn-highlight btn-extruded btn-fluid form-loading-indicator')[0].click();");
-
-                //トレードゾーンが表示されるまで待つ
-                if (!await waitUntilTrue(15, 1000, "document.getElementById('tradingZoneRegion').getAttribute('style')=='display: block;'"))
-                {
-                    Console.WriteLine("トレードゾーンの非表示");
-                    return false;
-                }
+                //広告の削除
+                await browser.EvaluateScriptAsync("document.evaluate('//*[@id=\"root\"]/div/div[16]/div/div[1]', document, null, 6, null).snapshotItem(0).click();");
+                await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
 
             }
             //デモ口座
