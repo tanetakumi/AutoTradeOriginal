@@ -39,7 +39,6 @@ namespace AutoTradeOriginal
                 await browser.EvaluateScriptAsync("document.evaluate('//*[@id=\"root\"]/div/div[16]/div/div[1]', document, null, 6, null).snapshotItem(0).click();");
                 await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
             }
-            return true;
         }
 
         public async Task ResetTab()
@@ -290,7 +289,7 @@ namespace AutoTradeOriginal
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("Namedpipeのメッセージが範囲外のものです。");
+                    throw new ArgumentOutOfRangeException("Namedpipeのメッセージが範囲外のものです。"+message);
                 }
 
                 //取引価格の選択
@@ -303,7 +302,7 @@ namespace AutoTradeOriginal
             }
             else
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("Namedpipeのメッセージが範囲外のものです。" + message);
             }
         }
 

@@ -178,7 +178,7 @@ namespace AutoTradeOriginal
 
                     string mes = await NamedPipe.WaitForNamedpipe("highlowpipe", ct);
 
-                    Logbox("シグナルを受け取りました");
+                    Logbox(mes.Split('#')[0]+"のシグナルを受け取りました");
 
                     //投資
                     string result = await BO.Invest(mes);
@@ -204,6 +204,7 @@ namespace AutoTradeOriginal
                 if (ct.IsCancellationRequested)
                 {
                     Console.WriteLine("main loop の削除");
+                    Logbox("投資スレッドのキャンセル");
                     return;
                 }
             }
@@ -253,15 +254,3 @@ namespace AutoTradeOriginal
         }
     }
 }
-
-//https://autotradeauth-default-rtdb.firebaseio.com/Users/data.json
-/*
-private async void button_pagedown_Click(object sender, EventArgs e)
-{
-    await BO.Scroll(0);
-}
-
-private async void button_pageup_Click(object sender, EventArgs e)
-{
-    await BO.Scroll(1);
-}*/
