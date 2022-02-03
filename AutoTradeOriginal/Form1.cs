@@ -50,8 +50,6 @@ namespace AutoTradeOriginal
         //ロードしたタイミング
         private void Form1_Load(object sender, EventArgs e)
         {
-            textBox_username.Text = Settings.Default.username;
-            textBox_password.Text = Settings.Default.password;
             //label15.Text = "バージョン:" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
@@ -67,8 +65,6 @@ namespace AutoTradeOriginal
             {
                 cts_loop.Cancel();
             }
-            Settings.Default.username = textBox_username.Text;
-            Settings.Default.password = textBox_password.Text;
             Settings.Default.Save();
             BO.Dispose();
         }

@@ -21,6 +21,7 @@ namespace AutoTradeOriginal
             //リアル口座
             if (real)
             {
+                //Reload
                 browser.Reload();
                 await Task.Delay(10000);
                 //広告の削除
@@ -288,7 +289,7 @@ namespace AutoTradeOriginal
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("Namedpipeのメッセージが範囲外のものです。");
+                    throw new ArgumentOutOfRangeException("Namedpipeのメッセージが範囲外のものです。"+message);
                 }
 
                 //取引価格の選択
@@ -301,7 +302,7 @@ namespace AutoTradeOriginal
             }
             else
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("Namedpipeのメッセージが範囲外のものです。" + message);
             }
         }
 
