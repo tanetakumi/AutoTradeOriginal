@@ -311,9 +311,6 @@ namespace AutoTradeOriginal
             await browser.EvaluateScriptAsync("document.getElementById('login-username').focus();");
             await Task.Delay(1000);
             sendKeyEventChar(74);
-
         }
-        
-
     }
 }
