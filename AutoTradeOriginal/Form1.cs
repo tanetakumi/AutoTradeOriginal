@@ -50,6 +50,8 @@ namespace AutoTradeOriginal
         //ロードしたタイミング
         private void Form1_Load(object sender, EventArgs e)
         {
+            textBox_username.Text = Settings.Default.username;
+            textBox_password.Text = Settings.Default.password;
             //label15.Text = "バージョン:" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
@@ -65,6 +67,8 @@ namespace AutoTradeOriginal
             {
                 cts_loop.Cancel();
             }
+            Settings.Default.username = textBox_username.Text;
+            Settings.Default.password = textBox_password.Text;
             Settings.Default.Save();
             BO.Dispose();
         }
@@ -174,7 +178,7 @@ namespace AutoTradeOriginal
 
                     string mes = await NamedPipe.WaitForNamedpipe("highlowpipe", ct);
 
-                    Logbox("シグナルを受け取りました");
+                    Logbox(mes.Split('#')[0]+"のシグナルを受け取りました");
 
                     //投資
                     string result = await BO.Invest(mes);
@@ -200,6 +204,7 @@ namespace AutoTradeOriginal
                 if (ct.IsCancellationRequested)
                 {
                     Console.WriteLine("main loop の削除");
+                    Logbox("投資スレッドのキャンセル");
                     return;
                 }
             }
@@ -249,15 +254,3 @@ namespace AutoTradeOriginal
         }
     }
 }
-
-//https://autotradeauth-default-rtdb.firebaseio.com/Users/data.json
-/*
-private async void button_pagedown_Click(object sender, EventArgs e)
-{
-    await BO.Scroll(0);
-}
-
-private async void button_pageup_Click(object sender, EventArgs e)
-{
-    await BO.Scroll(1);
-}*/
