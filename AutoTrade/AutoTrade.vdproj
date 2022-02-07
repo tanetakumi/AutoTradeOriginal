@@ -1108,7 +1108,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_ED6F38EC54182B09D71BCE31D5F13266"
+        "OwnerKey" = "8:_B1D47260437D4DCA928BBEB0FEE1C50A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1127,12 +1127,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_1D235405976C4CEBBFAB032E127458B0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B1D47260437D4DCA928BBEB0FEE1C50A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1933,6 +1927,12 @@
         "OwnerKey" = "8:_F1DE5A3B9DEA21C1156614C054045A03"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_ED6F38EC54182B09D71BCE31D5F13266"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -1951,6 +1951,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -1967,6 +1983,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -6602,7 +6626,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:AutoTrade"
         "ProductCode" = "8:{FCA1FFEA-9E1D-45F0-B6EB-D5ED6754FCAE}"
-        "PackageCode" = "8:{9E64B4A6-D282-45D5-9B27-7ADA37DD9AAC}"
+        "PackageCode" = "8:{161E9A53-C010-4875-A276-F4510B7F429C}"
         "UpgradeCode" = "8:{19D293D5-0672-4198-B4B1-6DE668AC0E54}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -6615,7 +6639,7 @@
         "ARPHELPLINK" = "8:"
         "Title" = "8:AutoTrade"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:ProTrader"
+        "ARPCONTACT" = "8:AutoTrade"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"

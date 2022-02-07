@@ -11,7 +11,8 @@ namespace AutoTradeOriginal
     {
         
         private CancellationTokenSource cts_loop = null;
-        private HighLow BO;                                                                                                                                                                                                                     
+        private HighLow BO;
+        private int invest_count = 0;
   
         public Form1()
         {
@@ -98,7 +99,7 @@ namespace AutoTradeOriginal
         }
         private async void button_start_Click(object sender, EventArgs e)
         {
-            if (DateTime.Now > DateTime.Parse("2022/02/09 12:34:56"))
+            if (DateTime.Now > DateTime.Parse("2022/02/20 12:34:56"))
             {
                 MessageBox.Show("Error");
                 return;
@@ -125,11 +126,8 @@ namespace AutoTradeOriginal
                         if (dt.Hour % 3 == 0 && dt.Minute == 3)
                         {
                             Console.WriteLine("リロードタスク実行");
-                            Invoke(new Action(async () =>
-                            {
-                                Logbox("リロードタスク実行");
-                                await BO.ReloadPage();
-                            }));
+                            await BO.ReloadPage();
+                            Invoke(new Action(() => Logbox("リロードタスク実行")));
                         }
                     }
                     catch (TaskCanceledException)
@@ -158,6 +156,15 @@ namespace AutoTradeOriginal
             Enable_interface();
         }
 
+        private static AutoResetEvent waitEvent = new AutoResetEvent(true);
+        private async Task Investment(string message)
+        {
+            waitEvent.WaitOne();
+            string result = await BO.Invest(message);
+            Logbox(result);
+            waitEvent.Set();
+        }
+
         private async Task InfiniteLoopAsync(CancellationToken ct)
         {
             while (true)
@@ -172,13 +179,34 @@ namespace AutoTradeOriginal
                     Logbox(mes.Split('#')[0]+"のシグナルを受け取りました");
 
                     //投資
-                    string result = await BO.Invest(mes);
+                    var _ = Task.Run(async () =>
+                    {
+                        DateTime dt = DateTime.Now;
+                        Console.WriteLine("待機中");
+                        waitEvent.WaitOne();
+                        Console.WriteLine("待機解除");
+                        if((DateTime.Now - dt).TotalSeconds < 7)
+                        {
+                            string res;
+                            try
+                            {
+                                res = await BO.Invest(mes);
+                            }
+                            catch (Exception e)
+                            {
+                                res = e.ToString();
+                            }
+                            Invoke(new Action(() => Logbox(res)));
+                        }
+                        Console.WriteLine("次の待機解除");
+                        waitEvent.Set();
+                    });
 
-                    Logbox(result);
-
-                    await Task.Delay(10000, ct);
-
-                    await BO.ResetTab();
+                    invest_count++;
+                    if(invest_count % 3 == 0)
+                    {
+                        await BO.ResetTab();
+                    }
                 }
                 catch (TaskCanceledException)
                 {
