@@ -50,9 +50,6 @@ namespace AutoTradeOriginal
         //ロードしたタイミング
         private void Form1_Load(object sender, EventArgs e)
         {
-            textBox_username.Text = Settings.Default.username;
-            textBox_password.Text = Settings.Default.password;
-            //label15.Text = "バージョン:" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         //閉じるとき
@@ -67,8 +64,6 @@ namespace AutoTradeOriginal
             {
                 cts_loop.Cancel();
             }
-            Settings.Default.username = textBox_username.Text;
-            Settings.Default.password = textBox_password.Text;
             Settings.Default.Save();
             BO.Dispose();
         }
@@ -84,13 +79,22 @@ namespace AutoTradeOriginal
         {
             button_stop.Enabled = false;
             button_start.Enabled = true;
-            splitContainer1.Panel1.Enabled = true;
+            button_loginpage.Enabled = true;
+            button_openpage.Enabled = true;
         }
         void Disable_interface()
         {
             button_stop.Enabled = true;
             button_start.Enabled = false;
-            splitContainer1.Panel1.Enabled = false;
+            button_loginpage.Enabled = false;
+            button_openpage.Enabled = false;
+        }
+        void Loading_interface()
+        {
+            button_stop.Enabled = false;
+            button_start.Enabled = false;
+            button_loginpage.Enabled = false;
+            button_openpage.Enabled = false;
         }
         private async void button_start_Click(object sender, EventArgs e)
         {
@@ -100,14 +104,13 @@ namespace AutoTradeOriginal
                 return;
             }
             Disable_interface();
-            await BO.Initialize();
-            await Task.Delay(10000);
             await BO.Oneclick();
             cts_loop = new CancellationTokenSource();
+            Restart(cts_loop.Token);
             await InfiniteLoopAsync(cts_loop.Token);
         }
 
-        private void restart(CancellationToken ct)
+        private void Restart(CancellationToken ct)
         {
 
             var _ = Task.Run(async () =>
@@ -119,9 +122,14 @@ namespace AutoTradeOriginal
                     {
                         await Task.Delay(60000, ct);
                         DateTime dt = DateTime.Now;
-                        if (dt.Hour == 0 && dt.Minute == 44)
+                        if (dt.Hour % 3 == 0 && dt.Minute == 3)
                         {
-                            return 0;
+                            Console.WriteLine("リロードタスク実行");
+                            Invoke(new Action(async () =>
+                            {
+                                Logbox("リロードタスク実行");
+                                await BO.ReloadPage();
+                            }));
                         }
                     }
                     catch (TaskCanceledException)
@@ -135,27 +143,10 @@ namespace AutoTradeOriginal
                     if (ct.IsCancellationRequested)
                     {
                         Console.WriteLine("再起動スレッドの削除");
-                        return 1;
+                        return;
                     }
                 }
-            },ct).ContinueWith((o) =>
-            {
-                if(o.Result == 0)
-                {
-                    Console.WriteLine("再起動タスク実行");
-                    Invoke(new Action(async () =>
-                    {
-                        button_stop.PerformClick();
-                        await Task.Delay(1000);
-                        button_start.PerformClick();
-                    }));
-                }
-                else
-                {
-                    Console.WriteLine("再起動キャンセルによる削除");
-                }
-                
-            });
+            },ct);
         }
 
         private void button_stop_Click(object sender, EventArgs e)
@@ -251,6 +242,24 @@ namespace AutoTradeOriginal
                     }
                 }
             }, ct);
+        }
+
+        private async void button_openpage_Click(object sender, EventArgs e)
+        {
+            label1.Text = "ロード中";
+            Loading_interface();
+            await BO.OpenDemo();
+            Enable_interface();
+            label1.Text = "";
+        }
+
+        private async void button_loginpage_Click(object sender, EventArgs e)
+        {
+            label1.Text = "ロード中";
+            Loading_interface();
+            await BO.OpenReal();
+            Enable_interface();
+            label1.Text = "";
         }
     }
 }
