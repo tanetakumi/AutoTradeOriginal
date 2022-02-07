@@ -35,19 +35,12 @@
             this.tab_setting = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-<<<<<<< HEAD
-            this.checkBox_real = new System.Windows.Forms.CheckBox();
-            this.listBox_log = new System.Windows.Forms.ListBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBox_read = new System.Windows.Forms.TextBox();
-=======
             this.listBox_log = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox_read = new System.Windows.Forms.TextBox();
             this.button_openpage = new System.Windows.Forms.Button();
             this.button_loginpage = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
->>>>>>> main
             this.tabControl1.SuspendLayout();
             this.tab_setting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -63,11 +56,7 @@
             // 
             // button_start
             // 
-<<<<<<< HEAD
-            this.button_start.Location = new System.Drawing.Point(15, 24);
-=======
             this.button_start.Location = new System.Drawing.Point(2, 28);
->>>>>>> main
             this.button_start.Margin = new System.Windows.Forms.Padding(2);
             this.button_start.Name = "button_start";
             this.button_start.Size = new System.Drawing.Size(96, 32);
@@ -79,11 +68,7 @@
             // button_stop
             // 
             this.button_stop.Enabled = false;
-<<<<<<< HEAD
-            this.button_stop.Location = new System.Drawing.Point(119, 24);
-=======
             this.button_stop.Location = new System.Drawing.Point(102, 28);
->>>>>>> main
             this.button_stop.Margin = new System.Windows.Forms.Padding(2);
             this.button_stop.Name = "button_stop";
             this.button_stop.Size = new System.Drawing.Size(96, 32);
@@ -142,12 +127,8 @@
             // 
             // splitContainer3.Panel1
             // 
-<<<<<<< HEAD
-            this.splitContainer3.Panel1.Controls.Add(this.checkBox_real);
-=======
             this.splitContainer3.Panel1.Controls.Add(this.button_loginpage);
             this.splitContainer3.Panel1.Controls.Add(this.button_openpage);
->>>>>>> main
             this.splitContainer3.Panel1.Controls.Add(this.button_stop);
             this.splitContainer3.Panel1.Controls.Add(this.button_start);
             // 
@@ -155,25 +136,9 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.listBox_log);
             this.splitContainer3.Size = new System.Drawing.Size(263, 640);
-<<<<<<< HEAD
-            this.splitContainer3.SplitterDistance = 65;
-            this.splitContainer3.TabIndex = 2;
-            // 
-            // checkBox_real
-            // 
-            this.checkBox_real.AutoSize = true;
-            this.checkBox_real.Location = new System.Drawing.Point(15, 3);
-            this.checkBox_real.Name = "checkBox_real";
-            this.checkBox_real.Size = new System.Drawing.Size(108, 16);
-            this.checkBox_real.TabIndex = 15;
-            this.checkBox_real.Text = "リアル口座の使用";
-            this.checkBox_real.UseVisualStyleBackColor = true;
-            // 
-=======
             this.splitContainer3.SplitterDistance = 67;
             this.splitContainer3.TabIndex = 2;
             // 
->>>>>>> main
             // listBox_log
             // 
             this.listBox_log.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -182,11 +147,7 @@
             this.listBox_log.ItemHeight = 12;
             this.listBox_log.Location = new System.Drawing.Point(0, 0);
             this.listBox_log.Name = "listBox_log";
-<<<<<<< HEAD
-            this.listBox_log.Size = new System.Drawing.Size(263, 571);
-=======
             this.listBox_log.Size = new System.Drawing.Size(263, 569);
->>>>>>> main
             this.listBox_log.TabIndex = 12;
             // 
             // tabPage2
@@ -209,8 +170,6 @@
             this.textBox_read.TabIndex = 0;
             this.textBox_read.Text = "あいうえお\r\n";
             // 
-<<<<<<< HEAD
-=======
             // button_openpage
             // 
             this.button_openpage.Location = new System.Drawing.Point(2, 3);
@@ -240,7 +199,6 @@
             this.label1.Size = new System.Drawing.Size(0, 38);
             this.label1.TabIndex = 0;
             // 
->>>>>>> main
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -277,10 +235,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tab_setting;
         private System.Windows.Forms.ListBox listBox_log;
-<<<<<<< HEAD
-        private System.Windows.Forms.CheckBox checkBox_real;
-=======
->>>>>>> main
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox textBox_read;
         private System.Windows.Forms.SplitContainer splitContainer1;

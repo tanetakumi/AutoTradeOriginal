@@ -243,8 +243,6 @@ namespace AutoTradeOriginal
                 }
             }, ct);
         }
-<<<<<<< HEAD
-=======
 
         private async void button_openpage_Click(object sender, EventArgs e)
         {
@@ -263,6 +261,5 @@ namespace AutoTradeOriginal
             Enable_interface();
             label1.Text = "";
         }
->>>>>>> main
     }
 }

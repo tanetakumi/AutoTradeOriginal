@@ -14,33 +14,6 @@ namespace AutoTradeOriginal
         {
         }
 
-<<<<<<< HEAD
-
-        //初期化
-        public async Task Initialize(bool real = false)
-        {
-            //リアル口座
-            if (real)
-            {
-                //Reload
-                browser.Reload();
-                await Task.Delay(10000);
-                //広告の削除
-                await browser.EvaluateScriptAsync("document.evaluate('//*[@id=\"root\"]/div/div[16]/div/div[1]', document, null, 6, null).snapshotItem(0).click();");
-                await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
-
-            }
-            //デモ口座
-            else
-            {
-                //デモ口座URL
-                await LoadPage("https://app.highlow.com/quick-demo");
-                await Task.Delay(10000);
-                //広告の削除
-                await browser.EvaluateScriptAsync("document.evaluate('//*[@id=\"root\"]/div/div[16]/div/div[1]', document, null, 6, null).snapshotItem(0).click();");
-                await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
-            }
-=======
         public async Task OpenDemo()
         {
             browser.Enabled = false;
@@ -75,7 +48,6 @@ namespace AutoTradeOriginal
                 "document.evaluate('//*[@id=\"root\"]/div/div[16]', document, null, 6, null).snapshotItem(0).style.display = 'none';" +
                 "document.getElementById('chart-container').style.display = 'none';"
                 );
->>>>>>> main
         }
 
         public async Task ResetTab()
