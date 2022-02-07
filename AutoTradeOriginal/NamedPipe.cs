@@ -14,7 +14,7 @@ namespace AutoTradeOriginal
         public static async Task<string> WaitForNamedpipe(string pipename, CancellationToken ct)
         {
             string message = "";
-            using (NamedPipeServerStream npss = new NamedPipeServerStream(pipename, PipeDirection.InOut, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
+            using (NamedPipeServerStream npss = new NamedPipeServerStream(pipename, PipeDirection.InOut, 3, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
             {
                 await npss.WaitForConnectionAsync(ct);
                 using (StreamReader reader = new StreamReader(npss))

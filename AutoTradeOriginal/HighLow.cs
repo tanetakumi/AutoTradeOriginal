@@ -14,6 +14,7 @@ namespace AutoTradeOriginal
         {
         }
 
+<<<<<<< HEAD
 
         //初期化
         public async Task Initialize(bool real = false)
@@ -39,6 +40,42 @@ namespace AutoTradeOriginal
                 await browser.EvaluateScriptAsync("document.evaluate('//*[@id=\"root\"]/div/div[16]/div/div[1]', document, null, 6, null).snapshotItem(0).click();");
                 await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
             }
+=======
+        public async Task OpenDemo()
+        {
+            browser.Enabled = false;
+            await LoadPage("https://app.highlow.com/quick-demo");
+            await Task.Delay(10000);
+            //広告の削除
+            await browser.EvaluateScriptAsync(
+                "document.evaluate('//*[@id=\"root\"]/div/div[16]', document, null, 6, null).snapshotItem(0).style.display = 'none';" +
+                "document.getElementById('chart-container').style.display = 'none';"
+                );
+            browser.Enabled = true;
+        }
+        public async Task OpenReal()
+        {
+            browser.Enabled = false;
+            await LoadPage("https://app.highlow.com/login");
+            await Task.Delay(10000);
+            //広告の削除
+            await browser.EvaluateScriptAsync(
+                "document.evaluate('//*[@id=\"root\"]/div/div[16]', document, null, 6, null).snapshotItem(0).style.display = 'none';" +
+                "document.getElementById('chart-container').style.display = 'none';"
+                );
+            browser.Enabled = true;
+        }
+
+        public async Task ReloadPage()
+        {
+            browser.Reload();
+            await Task.Delay(10000);
+            //広告の削除
+            await browser.EvaluateScriptAsync(
+                "document.evaluate('//*[@id=\"root\"]/div/div[16]', document, null, 6, null).snapshotItem(0).style.display = 'none';" +
+                "document.getElementById('chart-container').style.display = 'none';"
+                );
+>>>>>>> main
         }
 
         public async Task ResetTab()
@@ -136,6 +173,7 @@ namespace AutoTradeOriginal
                 " document, null , 6, null).snapshotItem(0);" +
                 "ele.value = 0; ele.focus();"
             );
+            await Task.Delay(50);
             inputNumber(price);
         }
         public async Task SelectPeriod(int num, string currency)
@@ -143,87 +181,106 @@ namespace AutoTradeOriginal
             //<non sp>  0 Turbo30s  1  Turbo60s  2  Turbo3m  3  Turbo5m  HighLow15m( 4  sho  5  mid  6  lon )  7  HighLow1h  8  HighLow1d 
             //<sp>      9 Turbo30s  10 Turbo60s  11 Turbo3m  12 Turbo5m  HighLow15m( 14 sho  15 mid  16 lon )  17 HighLow1h  18 HighLow1d
             string category = null;
-            string period = "600";
+            string period = null;
+            string confirm = null;
             string sub = null;
             switch (num)
             {
                 case 0:
                     category = "ChangingStrikeOOD0";
+                    confirm = "Turbo30";
                     period = "30000";
                     break;
                 case 1:
                     category = "ChangingStrikeOOD0";
                     period = "60000";
+                    confirm = "Turbo1";
                     break;
                 case 2:
                     category = "ChangingStrikeOOD0";
                     period = "180000";
+                    confirm = "Turbo3";
                     break;
                 case 3:
                     category = "ChangingStrikeOOD0";
                     period = "300000";
+                    confirm = "Turbo5";
                     break;
                 case 4:
                     category = "ChangingStrike0";
                     period = "900000";
-                    sub = "sho";
+                    confirm = "HighLow15";
+                    sub = "0";
                     break;
                 case 5:
                     category = "ChangingStrike0";
                     period = "900000";
-                    sub = "mid";
+                    confirm = "HighLow15";
+                    sub = "1";
                     break;
                 case 6:
                     category = "ChangingStrike0";
                     period = "900000";
-                    sub = "lon";
+                    confirm = "HighLow15";
+                    sub = "2";
                     break;
                 case 7:
                     category = "ChangingStrike0";
                     period = "3600000";
+                    confirm = "HighLow1";
                     break;
                 case 8:
                     category = "ChangingStrike0";
                     period = "86400000";
+                    confirm = "HighLow1";
                     break;
                 case 9:
                     category = "FixedPayoutHLOOD0";
                     period = "30000";
+                    confirm = "Turboスプレッド30";
                     break;
                 case 10:
                     category = "FixedPayoutHLOOD0";
                     period = "60000";
+                    confirm = "Turboスプレッド1";
                     break;
                 case 11:
                     category = "FixedPayoutHLOOD0";
                     period = "180000";
+                    confirm = "Turboスプレッド3";
                     break;
                 case 12:
                     category = "FixedPayoutHLOOD0";
                     period = "300000";
+                    confirm = "Turboスプレッド5";
                     break;
                 case 13:
                     category = "FixedPayoutHL0";
                     period = "900000";
-                    sub = "sho";
+                    confirm = "HighLowスプレッド15";
+                    sub = "0";
                     break;
                 case 14:
                     category = "FixedPayoutHL0";
                     period = "900000";
-                    sub = "mid";
+                    confirm = "HighLowスプレッド15";
+                    sub = "1";
                     break;
                 case 15:
                     category = "FixedPayoutHL0";
                     period = "900000";
-                    sub = "lon";
+                    confirm = "HighLowスプレッド15";
+                    sub = "2";
                     break;
                 case 16:
                     category = "FixedPayoutHL0";
                     period = "3600000";
+                    confirm = "HighLowスプレッド1";
                     break;
                 case 17:
                     category = "FixedPayoutHL0";
                     period = "86400000";
+                    confirm = "HighLowスプレッド1";
                     break;
                 default:
                     throw new Exception("選択できる期間ではありません。");
@@ -247,13 +304,26 @@ namespace AutoTradeOriginal
             {
                 //長さ選んで選択
                 await browser.EvaluateScriptAsync(
-                    "var select = 0;var periods = document.getElementById('content_0').children;if(select==0){" +
+                    "var select=" + sub + ";var periods = document.getElementById('content_0').children;if(select==0){" +
                     "for(var i=0;i<periods.length;i++){if(periods[i].children[2].children[0].getElementsByTagName('svg')[0]" +
                     ".getAttribute('class')!=null){var num = Number(periods[i].children[2].children[0].innerText.replace(':',''));" +
                     "if(num>5){periods[i].click();break;}}}} else if(select==1){periods[1].click()} else {for(var i=periods.length-1;i>=0;i--)" +
                     "{if(periods[i].children[2].children[0].getElementsByTagName('svg')[0].getAttribute('class')!=null){periods[i].click();break;} }}"
                 );
             }
+            
+            await Task.Delay(50);
+
+            //通貨選択できたか確認
+            
+            if(!await waitUntilTrue(5, 200,
+                "var text = document.evaluate('//*[@id=\"scroll_panel_1_content\"]/div[2]/div/div[1]', document, null, 6, null).snapshotItem(0).innerText;" +
+                "var mes = text.split(/\\n/);mes[0]+mes[3].replace(/[^0-9a-zA-Z\\u30a0-\\u30ff]/g,'')=='"+ currency + confirm + "';"
+                )){
+                await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
+                throw new Exception("通貨が選択できませんでした。");
+            }
+
             //DisplayOFF
             await browser.EvaluateScriptAsync("document.getElementById('chart-container').style.display = 'none';");
         }

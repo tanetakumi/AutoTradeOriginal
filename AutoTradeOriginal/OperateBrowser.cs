@@ -79,7 +79,7 @@ namespace AutoTradeOriginal
             {
                 if (trace)
                 {
-                    Console.WriteLine("Success = true");
+                    Console.WriteLine("Success = false");
                 }
                 return null;
             }
@@ -128,11 +128,16 @@ namespace AutoTradeOriginal
             for (int i = 0; i < num; i++)
             {
                 string text = await getResultFromScript(script);
-                if (text == "True")
+                Console.WriteLine("wait loop "+i.ToString()+"回目 = "+text);
+                if(text != null)
                 {
-                    result = true;
-                    break;
+                    if (text.ToLower() == "true")
+                    {
+                        result = true;
+                        break;
+                    }
                 }
+                
                 await Task.Delay(interval);
             }
             return result;
