@@ -34,13 +34,18 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tab_setting = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label1 = new System.Windows.Forms.Label();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.button_loginpage = new System.Windows.Forms.Button();
+            this.button_openpage = new System.Windows.Forms.Button();
             this.listBox_log = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.textBox_read = new System.Windows.Forms.TextBox();
-            this.button_openpage = new System.Windows.Forms.Button();
-            this.button_loginpage = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tab_setting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -52,6 +57,9 @@
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
             // button_start
@@ -117,6 +125,15 @@
             this.splitContainer1.SplitterDistance = 887;
             this.splitContainer1.TabIndex = 19;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("MS UI Gothic", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label1.Location = new System.Drawing.Point(313, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(0, 38);
+            this.label1.TabIndex = 0;
+            // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -139,6 +156,26 @@
             this.splitContainer3.SplitterDistance = 67;
             this.splitContainer3.TabIndex = 2;
             // 
+            // button_loginpage
+            // 
+            this.button_loginpage.Location = new System.Drawing.Point(102, 3);
+            this.button_loginpage.Name = "button_loginpage";
+            this.button_loginpage.Size = new System.Drawing.Size(96, 20);
+            this.button_loginpage.TabIndex = 2;
+            this.button_loginpage.Text = "ログインページ";
+            this.button_loginpage.UseVisualStyleBackColor = true;
+            this.button_loginpage.Click += new System.EventHandler(this.button_loginpage_Click);
+            // 
+            // button_openpage
+            // 
+            this.button_openpage.Location = new System.Drawing.Point(2, 3);
+            this.button_openpage.Name = "button_openpage";
+            this.button_openpage.Size = new System.Drawing.Size(96, 20);
+            this.button_openpage.TabIndex = 1;
+            this.button_openpage.Text = "デモページ";
+            this.button_openpage.UseVisualStyleBackColor = true;
+            this.button_openpage.Click += new System.EventHandler(this.button_openpage_Click);
+            // 
             // listBox_log
             // 
             this.listBox_log.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -152,6 +189,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.textBox_read);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -161,43 +199,89 @@
             this.tabPage2.Text = "注意事項";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.numericUpDown2);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.numericUpDown1);
+            this.groupBox1.Location = new System.Drawing.Point(685, 19);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(250, 270);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "開発者用";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(116, 23);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(120, 19);
+            this.numericUpDown1.TabIndex = 1;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            // 
             // textBox_read
             // 
             this.textBox_read.Location = new System.Drawing.Point(20, 19);
             this.textBox_read.Multiline = true;
             this.textBox_read.Name = "textBox_read";
-            this.textBox_read.Size = new System.Drawing.Size(886, 520);
+            this.textBox_read.Size = new System.Drawing.Size(636, 453);
             this.textBox_read.TabIndex = 0;
             this.textBox_read.Text = "あいうえお\r\n";
             // 
-            // button_openpage
+            // label2
             // 
-            this.button_openpage.Location = new System.Drawing.Point(2, 3);
-            this.button_openpage.Name = "button_openpage";
-            this.button_openpage.Size = new System.Drawing.Size(96, 20);
-            this.button_openpage.TabIndex = 1;
-            this.button_openpage.Text = "デモページ";
-            this.button_openpage.UseVisualStyleBackColor = true;
-            this.button_openpage.Click += new System.EventHandler(this.button_openpage_Click);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(17, 25);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(46, 12);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "tdelay 1";
             // 
-            // button_loginpage
+            // label3
             // 
-            this.button_loginpage.Location = new System.Drawing.Point(102, 3);
-            this.button_loginpage.Name = "button_loginpage";
-            this.button_loginpage.Size = new System.Drawing.Size(96, 20);
-            this.button_loginpage.TabIndex = 2;
-            this.button_loginpage.Text = "ログインページ";
-            this.button_loginpage.UseVisualStyleBackColor = true;
-            this.button_loginpage.Click += new System.EventHandler(this.button_loginpage_Click);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(17, 50);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(72, 12);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "tdelay 2(key)";
             // 
-            // label1
+            // numericUpDown2
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("MS UI Gothic", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(313, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 38);
-            this.label1.TabIndex = 0;
+            this.numericUpDown2.Location = new System.Drawing.Point(116, 48);
+            this.numericUpDown2.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Minimum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(120, 19);
+            this.numericUpDown2.TabIndex = 3;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
             // 
             // Form1
             // 
@@ -224,6 +308,10 @@
             this.splitContainer3.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -241,6 +329,11 @@
         private System.Windows.Forms.Button button_openpage;
         private System.Windows.Forms.Button button_loginpage;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numericUpDown2;
     }
 }
 

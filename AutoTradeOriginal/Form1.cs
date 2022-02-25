@@ -99,11 +99,6 @@ namespace AutoTradeOriginal
         }
         private async void button_start_Click(object sender, EventArgs e)
         {
-            if (DateTime.Now > DateTime.Parse("2022/02/20 12:34:56"))
-            {
-                MessageBox.Show("Error");
-                return;
-            }
             Disable_interface();
             await BO.Oneclick();
             cts_loop = new CancellationTokenSource();
@@ -174,6 +169,8 @@ namespace AutoTradeOriginal
                 {
                     Logbox("待機します");
 
+                    int time_delay1 = Decimal.ToInt32(numericUpDown1.Value);
+                    int time_delay2 = Decimal.ToInt32(numericUpDown2.Value);
                     string mes = await NamedPipe.WaitForNamedpipe("highlowpipe", ct);
 
                     Logbox(mes.Split('#')[0]+"のシグナルを受け取りました");
@@ -190,7 +187,7 @@ namespace AutoTradeOriginal
                             string res;
                             try
                             {
-                                res = await BO.Invest(mes);
+                                res = await BO.Invest(mes, time_delay1, time_delay2);
                             }
                             catch (Exception e)
                             {
@@ -205,7 +202,14 @@ namespace AutoTradeOriginal
                     invest_count++;
                     if(invest_count % 3 == 0)
                     {
-                        await BO.ResetTab();
+                        var _p = Task.Run(async () =>
+                        {
+                            Console.WriteLine("タブのリセット");
+                            waitEvent.WaitOne();
+                            await BO.ResetTab();
+                            waitEvent.Set();
+                        });
+                        
                     }
                 }
                 catch (TaskCanceledException)

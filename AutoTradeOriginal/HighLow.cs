@@ -107,11 +107,11 @@ namespace AutoTradeOriginal
             return false;
         }
 
-        public async Task<string> Invest(string message, int retry = 3)
+        public async Task<string> Invest(string message, int time_delay1= 500, int time_delay2 = 50, int retry = 3)
         {
             (string cur, string high_low, int price, int pnum) = MessageToTuple(message);
-            await SelectPeriod(pnum, cur);
-            await InputPrice(price);
+            await SelectPeriod(pnum, cur, time_delay1);
+            await InputPrice(price, time_delay2);
             await Task.Delay(500);
             for (int i = 0; i<retry ; i++)
             {
@@ -139,7 +139,7 @@ namespace AutoTradeOriginal
                 );
         }
 
-        public async Task InputPrice(int price)
+        public async Task InputPrice(int price, int time_delay=100)
         {   
             
             await browser.EvaluateScriptAsync(
@@ -147,10 +147,10 @@ namespace AutoTradeOriginal
                 " document, null , 6, null).snapshotItem(0);" +
                 "ele.value = 0; ele.focus();"
             );
-            await Task.Delay(50);
+            await Task.Delay(time_delay);
             inputNumber(price);
         }
-        public async Task SelectPeriod(int num, string currency)
+        public async Task SelectPeriod(int num, string currency, int time_delay=500)
         {
             //<non sp>  0 Turbo30s  1  Turbo60s  2  Turbo3m  3  Turbo5m  HighLow15m( 4  sho  5  mid  6  lon )  7  HighLow1h  8  HighLow1d 
             //<sp>      9 Turbo30s  10 Turbo60s  11 Turbo3m  12 Turbo5m  HighLow15m( 14 sho  15 mid  16 lon )  17 HighLow1h  18 HighLow1d
@@ -267,7 +267,7 @@ namespace AutoTradeOriginal
                 "if(!document.getElementById('" + currency + "').className.match('selected')){document.getElementById('" + currency + "').click();}"
             );
 
-            await Task.Delay(700);
+            await Task.Delay(time_delay);
             //15分を選んだかどうか
             if(sub == null)
             {
@@ -285,12 +285,9 @@ namespace AutoTradeOriginal
                     "{if(periods[i].children[2].children[0].getElementsByTagName('svg')[0].getAttribute('class')!=null){periods[i].click();break;} }}"
                 );
             }
-            
-            await Task.Delay(50);
 
             //通貨選択できたか確認
-            
-            if(!await waitUntilTrue(5, 200,
+            if(!await waitUntilTrue(15, 200,
                 "var text = document.evaluate('//*[@id=\"scroll_panel_1_content\"]/div[2]/div/div[1]', document, null, 6, null).snapshotItem(0).innerText;" +
                 "var mes = text.split(/\\n/);mes[0]+mes[3].replace(/[^0-9a-zA-Z\\u30a0-\\u30ff]/g,'')=='"+ currency + confirm + "';"
                 )){
