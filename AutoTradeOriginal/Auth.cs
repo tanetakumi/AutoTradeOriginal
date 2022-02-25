@@ -33,5 +33,18 @@ namespace AutoTradeOriginal
                 return false;
             }
         }
+
+        public static async Task<bool> Login(string num)
+        {
+            string res = await FirebaseWapper.Get("https://autotradeauth-default-rtdb.firebaseio.com/Users/" + num + "/.json");
+            if (res == "true")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

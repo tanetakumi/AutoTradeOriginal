@@ -99,6 +99,11 @@ namespace AutoTradeOriginal
         }
         private async void button_start_Click(object sender, EventArgs e)
         {
+            if (!await Auth.Login(textBox1.Text))
+            {
+                MessageBox.Show("ログイン情報が間違っています。");
+                return;
+            }
             Disable_interface();
             await BO.Oneclick();
             cts_loop = new CancellationTokenSource();
@@ -172,7 +177,7 @@ namespace AutoTradeOriginal
                     int time_delay1 = Decimal.ToInt32(numericUpDown1.Value);
                     int time_delay2 = Decimal.ToInt32(numericUpDown2.Value);
                     string mes = await NamedPipe.WaitForNamedpipe("highlowpipe", ct);
-
+                    int con = Decimal.ToInt32(numericUpDown3.Value);
                     Logbox(mes.Split('#')[0]+"のシグナルを受け取りました");
 
                     //投資
@@ -187,7 +192,7 @@ namespace AutoTradeOriginal
                             string res;
                             try
                             {
-                                res = await BO.Invest(mes, time_delay1, time_delay2);
+                                res = await BO.Invest(mes, con, time_delay1, time_delay2);
                             }
                             catch (Exception e)
                             {

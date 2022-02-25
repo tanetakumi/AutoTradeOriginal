@@ -107,28 +107,37 @@ namespace AutoTradeOriginal
             return false;
         }
 
-        public async Task<string> Invest(string message, int time_delay1= 500, int time_delay2 = 50, int retry = 3)
+        public async Task<string> Invest(string message, int continu = 1, int time_delay1= 500, int time_delay2 = 50 ,int retry = 3)
         {
             (string cur, string high_low, int price, int pnum) = MessageToTuple(message);
             await SelectPeriod(pnum, cur, time_delay1);
             await InputPrice(price, time_delay2);
             await Task.Delay(500);
-            for (int i = 0; i<retry ; i++)
+            string text = "";
+            for(int j = 0; j< continu; j++)
             {
-                if(high_low == "up")
+                string tmp_text = j.ToString() + "失敗";
+                for (int i = 0; i<retry ; i++)
                 {
-                    await browser.EvaluateScriptAsync("document.getElementById('HIGH_TRADE_BUTTON').click();");
+                    if(high_low == "up")
+                    {
+                        await browser.EvaluateScriptAsync("document.getElementById('HIGH_TRADE_BUTTON').click();");
+                    }
+                    else
+                    {
+                        await browser.EvaluateScriptAsync("document.getElementById('LOW_TRADE_BUTTON').click();");
+                    }
+                    if(await CheckInvestment())
+                    {
+                        tmp_text = j.ToString() + "成功";
+                        break;
+                    }
                 }
-                else
-                {
-                    await browser.EvaluateScriptAsync("document.getElementById('LOW_TRADE_BUTTON').click();");
-                }
-                if(await CheckInvestment())
-                {
-                    return (i+1).ToString()+"回目の投資にて成功";
-                }
+                text += tmp_text;
+                await Task.Delay(700);
             }
-            return "失敗しました。";
+            
+            return text;
         }
         public async Task Oneclick()
         {
