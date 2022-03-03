@@ -98,11 +98,6 @@ namespace AutoTradeOriginal
         }
         private async void button_start_Click(object sender, EventArgs e)
         {
-            if (DateTime.Now > DateTime.Parse("2022/02/09 12:34:56"))
-            {
-                MessageBox.Show("Error");
-                return;
-            }
             Disable_interface();
             await BO.Oneclick();
             cts_loop = new CancellationTokenSource();
@@ -260,6 +255,11 @@ namespace AutoTradeOriginal
             await BO.OpenReal();
             Enable_interface();
             label1.Text = "";
+        }
+
+        private void textBox_read_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
