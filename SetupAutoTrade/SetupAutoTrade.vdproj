@@ -256,6 +256,24 @@
         "Entry"
         {
         "MsmKey" = "8:_2A24BCFB19FBD205542A6838066FE764"
+        "OwnerKey" = "8:_CAE2A322A99747F2BB772B01A8304DC8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2A24BCFB19FBD205542A6838066FE764"
+        "OwnerKey" = "8:_33D2EF2860AFAB3DC226F221D2C965C6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2A24BCFB19FBD205542A6838066FE764"
+        "OwnerKey" = "8:_50398C587AE64A5290F533C2F1CBE77C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2A24BCFB19FBD205542A6838066FE764"
         "OwnerKey" = "8:_F660AE612A437750D6E311B8D357E1A7"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -531,6 +549,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_7372C15C8F114E54B8EFD39805E79135"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_765607F5B3AEE187655EB40C4C13441C"
         "OwnerKey" = "8:_97B603EFBCED4AADBD3018706DAB8719"
         "MsmSig" = "8:_UNDEFINED"
@@ -772,6 +796,12 @@
         "Entry"
         {
         "MsmKey" = "8:_BC6F4DFCD811409C90DD470E42416647"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BC6FD70277494B5396A6E8A8495A296D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1084,7 +1114,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6FF4524A8779F1BEA2F99EFD6C78CF19"
+        "OwnerKey" = "8:_97B603EFBCED4AADBD3018706DAB8719"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_CAE2A322A99747F2BB772B01A8304DC8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1097,18 +1133,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_33D2EF2860AFAB3DC226F221D2C965C6"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CAE2A322A99747F2BB772B01A8304DC8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_97B603EFBCED4AADBD3018706DAB8719"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1909,6 +1933,12 @@
         "OwnerKey" = "8:_6B96A19E9426DA6F3E6EEFFE1F5BF717"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_6FF4524A8779F1BEA2F99EFD6C78CF19"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -1927,6 +1957,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -1943,6 +1989,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -4014,6 +4068,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7372C15C8F114E54B8EFD39805E79135"
+            {
+            "SourcePath" = "8:G:\\マイドライブ\\Program\\C#\\CefEssential\\swiftshader\\libGLESv2.dll"
+            "TargetName" = "8:libGLESv2.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_89128837E2494ECF9B66F38438A8FBD3"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_765607F5B3AEE187655EB40C4C13441C"
             {
             "AssemblyRegister" = "3:1"
@@ -5125,6 +5199,26 @@
             "TargetName" = "8:libcef.dll"
             "Tag" = "8:"
             "Folder" = "8:_6BC57FC9AD794145B0CC5CE1F566ABE7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BC6FD70277494B5396A6E8A8495A296D"
+            {
+            "SourcePath" = "8:G:\\マイドライブ\\Program\\C#\\CefEssential\\swiftshader\\libEGL.dll"
+            "TargetName" = "8:libEGL.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_89128837E2494ECF9B66F38438A8FBD3"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -6528,6 +6622,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_89128837E2494ECF9B66F38438A8FBD3"
+                    {
+                    "Name" = "8:swiftshader"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_F2F51FE88C444DB1ACECE71662EC5FC9"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
         }
@@ -6545,9 +6650,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:SetupAutoTrade"
+        "ProductName" = "8:RAutoTrade"
         "ProductCode" = "8:{AA30D6D2-B9EC-4943-A4B6-8856874919E6}"
-        "PackageCode" = "8:{F0C5BBE3-2ECA-44C5-891D-4EAE52C2C373}"
+        "PackageCode" = "8:{57310BE2-23BF-417F-80E7-729713E6367E}"
         "UpgradeCode" = "8:{C0438696-C53A-4CFE-9D17-6EA5E2C75158}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -6555,12 +6660,12 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:nutanetakumi@yahoo.co.jp"
+        "Manufacturer" = "8:Rsan"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:SetupAutoTrade"
+        "Title" = "8:RAutoTrade"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:nutanetakumi@yahoo.co.jp"
+        "ARPCONTACT" = "8:Rsan"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"

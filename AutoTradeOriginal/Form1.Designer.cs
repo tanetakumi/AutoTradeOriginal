@@ -36,6 +36,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button_loginpage = new System.Windows.Forms.Button();
@@ -48,6 +49,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.textBox_read = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tab_setting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -58,6 +60,7 @@
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -146,6 +149,8 @@
             // 
             // splitContainer3.Panel1
             // 
+            this.splitContainer3.Panel1.Controls.Add(this.label7);
+            this.splitContainer3.Panel1.Controls.Add(this.numericUpDown3);
             this.splitContainer3.Panel1.Controls.Add(this.label6);
             this.splitContainer3.Panel1.Controls.Add(this.textBox1);
             this.splitContainer3.Panel1.Controls.Add(this.button_loginpage);
@@ -160,6 +165,28 @@
             this.splitContainer3.SplitterDistance = 188;
             this.splitContainer3.TabIndex = 2;
             // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.Location = new System.Drawing.Point(102, 117);
+            this.numericUpDown3.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(100, 19);
+            this.numericUpDown3.TabIndex = 5;
+            this.numericUpDown3.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -171,7 +198,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(86, 83);
+            this.textBox1.Location = new System.Drawing.Point(102, 83);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 19);
             this.textBox1.TabIndex = 3;
@@ -303,6 +330,15 @@
             this.textBox_read.TabIndex = 0;
             this.textBox_read.Text = resources.GetString("textBox_read.Text");
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(20, 119);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(72, 12);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "連続エントリー";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -327,6 +363,7 @@
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -356,11 +393,13 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        //private System.Windows.Forms.NumericUpDown numericUpDown3;
         private System.Windows.Forms.Label label5;
         //private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.Label label7;
     }
 }
 
