@@ -113,17 +113,22 @@ namespace AutoTradeOriginal
             await Task.Delay(500);
             for (int i = 0; i<retry ; i++)
             {
-                if(high_low == "up")
+                if (await waitUntilTrue(25,200, 
+                    "document.evaluate('//*[@id=\"scroll_panel_1_content\"]/div[2]/div/div[2]/div'," +
+                    "document, null, 6, null).snapshotItem(0).getAttribute('class').indexOf('disable')==-1; "))
                 {
-                    await browser.EvaluateScriptAsync("document.getElementById('HIGH_TRADE_BUTTON').click();");
-                }
-                else
-                {
-                    await browser.EvaluateScriptAsync("document.getElementById('LOW_TRADE_BUTTON').click();");
-                }
-                if(await CheckInvestment())
-                {
-                    return (i+1).ToString()+"回目の投資にて成功";
+                    if (high_low == "up")
+                    {
+                        await browser.EvaluateScriptAsync("document.getElementById('HIGH_TRADE_BUTTON').click();");
+                    }
+                    else
+                    {
+                        await browser.EvaluateScriptAsync("document.getElementById('LOW_TRADE_BUTTON').click();");
+                    }
+                    if (await CheckInvestment())
+                    {
+                        return (i + 1).ToString() + "回目の投資にて成功";
+                    }
                 }
             }
             return "失敗しました。";
@@ -139,14 +144,25 @@ namespace AutoTradeOriginal
 
         public async Task InputPrice(int price)
         {   
-            
-            await browser.EvaluateScriptAsync(
-                "var ele = document.evaluate('//*[@id=\"scroll_panel_1_content\"]/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div/input'," +
-                " document, null , 6, null).snapshotItem(0);" +
-                "ele.value = 0; ele.focus();"
-            );
-            await Task.Delay(50);
-            inputNumber(price);
+            for(int i = 0; i < 4; i++)
+            {
+                string confirm_price = await getResultFromScript(
+                    "document.evaluate('//*[@id=\"scroll_panel_1_content\"]/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div/input'," +
+                    "document, null, 6, null).snapshotItem(0).value.replace(/[^0-9]/g,'')");
+                Console.WriteLine("現在の入力されている金額 : "+confirm_price);
+                if (confirm_price == price.ToString())
+                {
+                    break;
+                }
+                await browser.EvaluateScriptAsync(
+                    "var ele = document.evaluate('//*[@id=\"scroll_panel_1_content\"]/div[2]/div/div[2]/div/div[1]/div[1]/div[2]/div/input'," +
+                    " document, null , 6, null).snapshotItem(0);" +
+                    "ele.value = 0; ele.focus();"
+                );
+                await Task.Delay(50);
+                inputNumber(price);
+            }
+
         }
         public async Task SelectPeriod(int num, string currency)
         {

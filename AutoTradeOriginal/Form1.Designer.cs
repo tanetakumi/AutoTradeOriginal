@@ -56,7 +56,7 @@
             // 
             // button_start
             // 
-            this.button_start.Location = new System.Drawing.Point(76, 48);
+            this.button_start.Location = new System.Drawing.Point(3, 41);
             this.button_start.Margin = new System.Windows.Forms.Padding(2);
             this.button_start.Name = "button_start";
             this.button_start.Size = new System.Drawing.Size(96, 32);
@@ -68,7 +68,7 @@
             // button_stop
             // 
             this.button_stop.Enabled = false;
-            this.button_stop.Location = new System.Drawing.Point(178, 48);
+            this.button_stop.Location = new System.Drawing.Point(105, 41);
             this.button_stop.Margin = new System.Windows.Forms.Padding(2);
             this.button_stop.Name = "button_stop";
             this.button_stop.Size = new System.Drawing.Size(96, 32);
@@ -114,7 +114,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer1.Size = new System.Drawing.Size(1154, 640);
-            this.splitContainer1.SplitterDistance = 863;
+            this.splitContainer1.SplitterDistance = 932;
             this.splitContainer1.TabIndex = 19;
             // 
             // label1
@@ -136,7 +136,6 @@
             // 
             // splitContainer3.Panel1
             // 
-            this.splitContainer3.Panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("splitContainer3.Panel1.BackgroundImage")));
             this.splitContainer3.Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.splitContainer3.Panel1.Controls.Add(this.button_loginpage);
             this.splitContainer3.Panel1.Controls.Add(this.button_openpage);
@@ -146,13 +145,13 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.listBox_log);
-            this.splitContainer3.Size = new System.Drawing.Size(287, 640);
-            this.splitContainer3.SplitterDistance = 136;
+            this.splitContainer3.Size = new System.Drawing.Size(218, 640);
+            this.splitContainer3.SplitterDistance = 85;
             this.splitContainer3.TabIndex = 2;
             // 
             // button_loginpage
             // 
-            this.button_loginpage.Location = new System.Drawing.Point(178, 16);
+            this.button_loginpage.Location = new System.Drawing.Point(105, 16);
             this.button_loginpage.Name = "button_loginpage";
             this.button_loginpage.Size = new System.Drawing.Size(96, 20);
             this.button_loginpage.TabIndex = 2;
@@ -162,7 +161,7 @@
             // 
             // button_openpage
             // 
-            this.button_openpage.Location = new System.Drawing.Point(76, 16);
+            this.button_openpage.Location = new System.Drawing.Point(3, 16);
             this.button_openpage.Name = "button_openpage";
             this.button_openpage.Size = new System.Drawing.Size(96, 20);
             this.button_openpage.TabIndex = 1;
@@ -178,7 +177,7 @@
             this.listBox_log.ItemHeight = 12;
             this.listBox_log.Location = new System.Drawing.Point(0, 0);
             this.listBox_log.Name = "listBox_log";
-            this.listBox_log.Size = new System.Drawing.Size(287, 500);
+            this.listBox_log.Size = new System.Drawing.Size(218, 551);
             this.listBox_log.TabIndex = 12;
             // 
             // tabPage2
@@ -203,8 +202,7 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1168, 672);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

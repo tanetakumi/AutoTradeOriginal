@@ -1,11 +1,8 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.0.32014.148
+VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTradeOriginal", "AutoTradeOriginal\AutoTradeOriginal.csproj", "{7D5EE7D9-35DD-404B-92FB-AC35CF9F84B4}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AutoTrade", "AutoTrade\AutoTrade.vdproj", "{B58C5858-D198-46A3-AC0C-3EF7258EF790}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +20,6 @@ Global
 		{7D5EE7D9-35DD-404B-92FB-AC35CF9F84B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7D5EE7D9-35DD-404B-92FB-AC35CF9F84B4}.Release|x86.ActiveCfg = Release|x86
 		{7D5EE7D9-35DD-404B-92FB-AC35CF9F84B4}.Release|x86.Build.0 = Release|x86
-		{B58C5858-D198-46A3-AC0C-3EF7258EF790}.Debug|Any CPU.ActiveCfg = Debug
-		{B58C5858-D198-46A3-AC0C-3EF7258EF790}.Debug|x86.ActiveCfg = Debug
-		{B58C5858-D198-46A3-AC0C-3EF7258EF790}.Release|Any CPU.ActiveCfg = Release
-		{B58C5858-D198-46A3-AC0C-3EF7258EF790}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
